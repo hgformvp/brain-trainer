@@ -36,6 +36,7 @@
 
     // Category display names
     const categoryNames = {
+        mentalmath: 'Mental Math',
         probability: 'Probability',
         tvm: 'Time Value',
         gametheory: 'Game Theory',

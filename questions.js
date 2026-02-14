@@ -554,6 +554,380 @@ const Questions = {
                 explanation: `First digit: 9 choices (1-9). Second: 9 choices (0-9 except first). Third: 8 choices. 9 × 9 × 8 = 648`
             };
         }
+    ],
+
+    // ==========================================
+    // MENTAL MATH - Quick Finance Calculations
+    // ==========================================
+    mentalmath: [
+        // Quick multiplication - deal sizes
+        () => {
+            const multipliers = [
+                { a: 15, b: 12, ans: 180 },
+                { a: 25, b: 16, ans: 400 },
+                { a: 18, b: 15, ans: 270 },
+                { a: 24, b: 25, ans: 600 },
+                { a: 35, b: 14, ans: 490 },
+                { a: 45, b: 12, ans: 540 },
+                { a: 16, b: 25, ans: 400 },
+                { a: 32, b: 15, ans: 480 },
+                { a: 75, b: 8, ans: 600 },
+                { a: 125, b: 8, ans: 1000 }
+            ];
+            const m = multipliers[Math.floor(Math.random() * multipliers.length)];
+            return {
+                question: `${m.a} × ${m.b} = ?`,
+                answer: m.ans,
+                tolerance: 0,
+                explanation: `${m.a} × ${m.b} = ${m.ans}`
+            };
+        },
+
+        // Larger multiplication - millions
+        () => {
+            const a = [2, 3, 4, 5, 6, 7, 8][Math.floor(Math.random() * 7)];
+            const b = [15, 25, 35, 45, 75][Math.floor(Math.random() * 5)];
+            const ans = a * b;
+            return {
+                question: `$${a}M × ${b} = $___M`,
+                answer: ans,
+                tolerance: 0,
+                explanation: `${a} × ${b} = ${ans}`
+            };
+        },
+
+        // Per share calculation
+        () => {
+            const total = [240, 360, 480, 720, 840, 960][Math.floor(Math.random() * 6)];
+            const shares = [12, 15, 16, 18, 20, 24][Math.floor(Math.random() * 6)];
+            const perShare = total / shares;
+            return {
+                question: `$${total}M ÷ ${shares}M shares = $___/share`,
+                answer: perShare,
+                tolerance: 0.1,
+                explanation: `${total} ÷ ${shares} = $${perShare}`
+            };
+        },
+
+        // Quick division
+        () => {
+            const divisions = [
+                { a: 144, b: 12, ans: 12 },
+                { a: 225, b: 15, ans: 15 },
+                { a: 196, b: 14, ans: 14 },
+                { a: 324, b: 18, ans: 18 },
+                { a: 256, b: 16, ans: 16 },
+                { a: 168, b: 14, ans: 12 },
+                { a: 195, b: 15, ans: 13 },
+                { a: 288, b: 16, ans: 18 },
+                { a: 252, b: 12, ans: 21 },
+                { a: 375, b: 25, ans: 15 }
+            ];
+            const d = divisions[Math.floor(Math.random() * divisions.length)];
+            return {
+                question: `${d.a} ÷ ${d.b} = ?`,
+                answer: d.ans,
+                tolerance: 0,
+                explanation: `${d.a} ÷ ${d.b} = ${d.ans}`
+            };
+        },
+
+        // Percentage of amount
+        () => {
+            const amounts = [200, 400, 500, 800, 1200, 1500, 2000, 2500];
+            const percents = [5, 10, 15, 20, 25, 30, 40];
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            const pct = percents[Math.floor(Math.random() * percents.length)];
+            const ans = amount * pct / 100;
+            return {
+                question: `${pct}% of $${amount.toLocaleString()} = ?`,
+                answer: ans,
+                tolerance: 0,
+                explanation: `${pct}% × ${amount} = ${ans}`
+            };
+        },
+
+        // Price after percentage change
+        () => {
+            const prices = [50, 80, 100, 120, 150, 200, 250];
+            const changes = [10, 15, 20, 25];
+            const price = prices[Math.floor(Math.random() * prices.length)];
+            const change = changes[Math.floor(Math.random() * changes.length)];
+            const isUp = Math.random() > 0.5;
+            const newPrice = isUp ? price * (1 + change/100) : price * (1 - change/100);
+            return {
+                question: `$${price} ${isUp ? '↑' : '↓'} ${change}% = ?`,
+                answer: newPrice,
+                tolerance: 0.5,
+                explanation: `$${price} × ${isUp ? (1 + change/100) : (1 - change/100)} = $${newPrice}`
+            };
+        },
+
+        // Percentage change calculation
+        () => {
+            const scenarios = [
+                { from: 100, to: 120, ans: 20 },
+                { from: 100, to: 80, ans: -20 },
+                { from: 50, to: 75, ans: 50 },
+                { from: 80, to: 100, ans: 25 },
+                { from: 200, to: 250, ans: 25 },
+                { from: 150, to: 120, ans: -20 },
+                { from: 40, to: 50, ans: 25 },
+                { from: 125, to: 100, ans: -20 },
+                { from: 80, to: 120, ans: 50 },
+                { from: 60, to: 45, ans: -25 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            return {
+                question: `$${s.from} → $${s.to}. % change?`,
+                answer: s.ans,
+                tolerance: 1,
+                explanation: `(${s.to} - ${s.from}) / ${s.from} × 100 = ${s.ans}%`
+            };
+        },
+
+        // Basis points to percentage
+        () => {
+            const bps = [25, 50, 75, 100, 125, 150, 200, 250, 300, 350][Math.floor(Math.random() * 10)];
+            const pct = bps / 100;
+            return {
+                question: `${bps} bps = ____%`,
+                answer: pct,
+                tolerance: 0,
+                explanation: `${bps} basis points ÷ 100 = ${pct}%`
+            };
+        },
+
+        // Percentage to basis points
+        () => {
+            const pct = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3][Math.floor(Math.random() * 9)];
+            const bps = pct * 100;
+            return {
+                question: `${pct}% = ____ bps`,
+                answer: bps,
+                tolerance: 0,
+                explanation: `${pct}% × 100 = ${bps} basis points`
+            };
+        },
+
+        // Quick squares
+        () => {
+            const n = [11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25][Math.floor(Math.random() * 14)];
+            const ans = n * n;
+            return {
+                question: `${n}² = ?`,
+                answer: ans,
+                tolerance: 0,
+                explanation: `${n} × ${n} = ${ans}`
+            };
+        },
+
+        // Enterprise value quick calc
+        () => {
+            const price = [25, 40, 50, 75, 100][Math.floor(Math.random() * 5)];
+            const shares = [10, 20, 40, 50, 100][Math.floor(Math.random() * 5)];
+            const marketCap = price * shares;
+            return {
+                question: `$${price}/share × ${shares}M shares = $___M market cap`,
+                answer: marketCap,
+                tolerance: 0,
+                explanation: `${price} × ${shares} = ${marketCap}`
+            };
+        },
+
+        // Multiple on revenue
+        () => {
+            const revenue = [50, 100, 150, 200, 250][Math.floor(Math.random() * 5)];
+            const multiple = [2, 3, 4, 5, 6, 8, 10][Math.floor(Math.random() * 7)];
+            const ev = revenue * multiple;
+            return {
+                question: `$${revenue}M revenue × ${multiple}x = $___M`,
+                answer: ev,
+                tolerance: 0,
+                explanation: `${revenue} × ${multiple} = ${ev}`
+            };
+        },
+
+        // Reverse multiple calculation
+        () => {
+            const ev = [300, 400, 500, 600, 800, 1000][Math.floor(Math.random() * 6)];
+            const revenue = [50, 100, 150, 200][Math.floor(Math.random() * 4)];
+            const multiple = ev / revenue;
+            return {
+                question: `$${ev}M EV ÷ $${revenue}M revenue = ___x multiple`,
+                answer: multiple,
+                tolerance: 0.1,
+                explanation: `${ev} ÷ ${revenue} = ${multiple}x`
+            };
+        },
+
+        // Quick addition (3 numbers)
+        () => {
+            const a = Math.floor(Math.random() * 90) + 10;
+            const b = Math.floor(Math.random() * 90) + 10;
+            const c = Math.floor(Math.random() * 90) + 10;
+            return {
+                question: `${a} + ${b} + ${c} = ?`,
+                answer: a + b + c,
+                tolerance: 0,
+                explanation: `${a} + ${b} + ${c} = ${a + b + c}`
+            };
+        },
+
+        // Debt/equity splits
+        () => {
+            const total = [100, 200, 500, 1000][Math.floor(Math.random() * 4)];
+            const debtPct = [30, 40, 50, 60, 70][Math.floor(Math.random() * 5)];
+            const debt = total * debtPct / 100;
+            return {
+                question: `$${total}M deal, ${debtPct}% debt. Debt = $___M`,
+                answer: debt,
+                tolerance: 0,
+                explanation: `${total} × ${debtPct}% = ${debt}`
+            };
+        },
+
+        // Margin calculation
+        () => {
+            const revenue = [100, 200, 250, 400, 500][Math.floor(Math.random() * 5)];
+            const margin = [10, 15, 20, 25, 30, 40][Math.floor(Math.random() * 6)];
+            const profit = revenue * margin / 100;
+            return {
+                question: `$${revenue}M revenue, ${margin}% margin = $___M profit`,
+                answer: profit,
+                tolerance: 0,
+                explanation: `${revenue} × ${margin}% = ${profit}`
+            };
+        },
+
+        // Implied margin
+        () => {
+            const scenarios = [
+                { rev: 100, profit: 20, margin: 20 },
+                { rev: 200, profit: 50, margin: 25 },
+                { rev: 80, profit: 24, margin: 30 },
+                { rev: 150, profit: 30, margin: 20 },
+                { rev: 250, profit: 50, margin: 20 },
+                { rev: 120, profit: 18, margin: 15 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            return {
+                question: `$${s.profit}M profit ÷ $${s.rev}M revenue = ___% margin`,
+                answer: s.margin,
+                tolerance: 1,
+                explanation: `${s.profit} ÷ ${s.rev} × 100 = ${s.margin}%`
+            };
+        },
+
+        // LTV calculation
+        () => {
+            const arpu = [50, 100, 150, 200][Math.floor(Math.random() * 4)];
+            const months = [12, 24, 36, 48][Math.floor(Math.random() * 4)];
+            const ltv = arpu * months;
+            return {
+                question: `$${arpu}/month × ${months} months = $____ LTV`,
+                answer: ltv,
+                tolerance: 0,
+                explanation: `${arpu} × ${months} = ${ltv}`
+            };
+        },
+
+        // CAC payback
+        () => {
+            const cac = [500, 600, 800, 1000, 1200][Math.floor(Math.random() * 5)];
+            const monthly = [50, 100, 150, 200][Math.floor(Math.random() * 4)];
+            const months = cac / monthly;
+            return {
+                question: `$${cac} CAC ÷ $${monthly}/month = ___ month payback`,
+                answer: months,
+                tolerance: 0.5,
+                explanation: `${cac} ÷ ${monthly} = ${months} months`
+            };
+        },
+
+        // Dilution calculation
+        () => {
+            const existingShares = [80, 100, 200][Math.floor(Math.random() * 3)];
+            const newShares = [20, 25, 50][Math.floor(Math.random() * 3)];
+            const totalShares = existingShares + newShares;
+            const dilution = Math.round((newShares / totalShares) * 100);
+            return {
+                question: `${existingShares}M existing + ${newShares}M new shares = ___% dilution`,
+                answer: dilution,
+                tolerance: 1,
+                explanation: `${newShares} ÷ ${totalShares} = ${dilution}%`
+            };
+        },
+
+        // Ownership percentage
+        () => {
+            const yourShares = [10, 15, 20, 25][Math.floor(Math.random() * 4)];
+            const totalShares = [100, 200][Math.floor(Math.random() * 2)];
+            const ownership = (yourShares / totalShares) * 100;
+            return {
+                question: `${yourShares}M shares of ${totalShares}M total = ___% ownership`,
+                answer: ownership,
+                tolerance: 0.5,
+                explanation: `${yourShares} ÷ ${totalShares} × 100 = ${ownership}%`
+            };
+        },
+
+        // IRR approximation (doubling)
+        () => {
+            const years = [2, 3, 4, 5][Math.floor(Math.random() * 4)];
+            // Rule of 72 backwards
+            const irr = Math.round(72 / years);
+            return {
+                question: `2x return in ${years} years ≈ ___% IRR`,
+                answer: irr,
+                tolerance: 3,
+                explanation: `Rule of 72: 72 ÷ ${years} ≈ ${irr}% IRR`
+            };
+        },
+
+        // MOIC to IRR rough (3x)
+        () => {
+            const scenarios = [
+                { moic: 3, years: 3, irr: 44 },
+                { moic: 3, years: 4, irr: 32 },
+                { moic: 3, years: 5, irr: 25 },
+                { moic: 2, years: 3, irr: 26 },
+                { moic: 2, years: 5, irr: 15 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            return {
+                question: `${s.moic}x MOIC in ${s.years} years ≈ ___% IRR`,
+                answer: s.irr,
+                tolerance: 5,
+                explanation: `(${s.moic})^(1/${s.years}) - 1 ≈ ${s.irr}%`
+            };
+        },
+
+        // Gross to net
+        () => {
+            const gross = [100, 150, 200, 250, 300][Math.floor(Math.random() * 5)];
+            const fee = [1, 1.5, 2, 2.5][Math.floor(Math.random() * 4)];
+            const net = gross - fee;
+            return {
+                question: `${gross}% gross - ${fee}% fee = ___% net`,
+                answer: net,
+                tolerance: 0,
+                explanation: `${gross} - ${fee} = ${net}%`
+            };
+        },
+
+        // Split calculation
+        () => {
+            const total = [60, 80, 100, 120][Math.floor(Math.random() * 4)];
+            const split = [60, 70, 75, 80][Math.floor(Math.random() * 4)];
+            const yourPart = total * split / 100;
+            return {
+                question: `$${total}M with ${split}/${100-split} split. Your ${split}% = $___M`,
+                answer: yourPart,
+                tolerance: 0,
+                explanation: `${total} × ${split}% = ${yourPart}`
+            };
+        }
     ]
 };
 

@@ -5,7 +5,9 @@
       "Bash(python -m http.server:*)",
       "Bash(gh --version:*)",
       "Bash(curl:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial Brain Trainer app\n\n- Dark theme mobile-first design\n- 5 question categories: Probability, TVM, Game Theory, Stats, Combinatorics\n- 40+ question templates with random variations\n- Immediate feedback with explanations\n- Streak tracking with local storage\n- Category filtering\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd Mental Math category with 25 finance-focused drills\n\n- Quick multiplication/division\n- Percentage calculations \\(of amount, change\\)\n- Basis points conversions\n- Per-share and market cap calcs\n- Multiples and margins\n- MOIC/IRR approximations\n- Dilution and ownership math\n- CAC/LTV calculations\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
