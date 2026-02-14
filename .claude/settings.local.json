@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(python -m http.server:*)",
+      "Bash(gh --version:*)",
+      "Bash(curl:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

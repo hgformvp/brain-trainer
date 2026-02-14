@@ -1,0 +1,351 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #13131a;
+    --bg-card: #1a1a24;
+    --bg-hover: #252532;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --text-muted: #606070;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --success: #22c55e;
+    --success-bg: rgba(34, 197, 94, 0.15);
+    --error: #ef4444;
+    --error-bg: rgba(239, 68, 68, 0.15);
+    --warning: #f59e0b;
+    --border: #2a2a3a;
+}
+
+html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+body {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stats {
+    display: flex;
+    gap: 16px;
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+#streak {
+    color: var(--warning);
+}
+
+/* Category Pills */
+.category-pills {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.category-pills::-webkit-scrollbar {
+    display: none;
+}
+
+.pill {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pill:hover {
+    background: var(--bg-hover);
+}
+
+.pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+/* Question Card */
+.question-card {
+    flex: 1;
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+}
+
+.category-badge {
+    align-self: flex-start;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.category-badge.probability { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+.category-badge.tvm { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.category-badge.gametheory { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.category-badge.stats { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+.category-badge.combinatorics { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+
+.question-text {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    flex: 1;
+}
+
+/* Answer Input */
+.answer-section {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.answer-input {
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 18px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.answer-input:focus {
+    border-color: var(--accent);
+}
+
+.answer-input::placeholder {
+    color: var(--text-muted);
+}
+
+.submit-btn {
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: var(--accent-hover);
+}
+
+.submit-btn:active {
+    transform: scale(0.98);
+}
+
+/* Multiple Choice */
+.choices-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.choice-btn {
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.choice-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-hover);
+}
+
+.choice-btn.selected {
+    border-color: var(--accent);
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.choice-btn.correct {
+    border-color: var(--success);
+    background: var(--success-bg);
+}
+
+.choice-btn.incorrect {
+    border-color: var(--error);
+    background: var(--error-bg);
+}
+
+/* Result Section */
+.result-section {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.result-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.result-icon.correct {
+    color: var(--success);
+}
+
+.result-icon.incorrect {
+    color: var(--error);
+}
+
+.result-text {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.result-text.correct {
+    color: var(--success);
+}
+
+.result-text.incorrect {
+    color: var(--error);
+}
+
+.explanation {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    text-align: left;
+}
+
+.next-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.next-btn:hover {
+    background: var(--accent-hover);
+}
+
+/* Skip Button */
+.skip-btn {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.skip-btn:hover {
+    color: var(--text-secondary);
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.question-card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Mobile adjustments */
+@media (max-width: 400px) {
+    .question-text {
+        font-size: 18px;
+    }
+
+    .answer-input {
+        font-size: 16px;
+        padding: 14px;
+    }
+
+    .pill {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Prevent zoom on iOS */
+input[type="text"] {
+    font-size: 16px;
+}
