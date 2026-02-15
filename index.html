@@ -8,64 +8,224 @@
     <meta name="theme-color" content="#0a0a0f">
     <title>Brain Trainer</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="library.css">
 </head>
 <body>
     <div id="app">
-        <!-- Header -->
-        <header class="header">
-            <h1>Brain Trainer</h1>
-            <div class="stats">
-                <span id="streak">🔥 <span id="streak-count">0</span></span>
-                <span id="score"><span id="correct-count">0</span>/<span id="total-count">0</span></span>
-            </div>
-        </header>
+        <!-- Mode Toggle -->
+        <nav class="mode-toggle">
+            <button class="mode-btn active" data-mode="train">Train</button>
+            <button class="mode-btn" data-mode="library">Library</button>
+        </nav>
 
-        <!-- Category Pills -->
-        <div class="category-pills">
-            <button class="pill active" data-category="all">All</button>
-            <button class="pill" data-category="mentalmath">Mental Math</button>
-            <button class="pill" data-category="probability">Probability</button>
-            <button class="pill" data-category="tvm">TVM</button>
-            <button class="pill" data-category="gametheory">Game Theory</button>
-            <button class="pill" data-category="stats">Stats</button>
-            <button class="pill" data-category="combinatorics">Counting</button>
-        </div>
+        <!-- ==================== TRAIN SECTION ==================== -->
+        <section id="train-section" class="app-section">
+            <!-- Header -->
+            <header class="header">
+                <h1>Brain Trainer</h1>
+                <div class="stats">
+                    <span id="streak">🔥 <span id="streak-count">0</span></span>
+                    <span id="score"><span id="correct-count">0</span>/<span id="total-count">0</span></span>
+                </div>
+            </header>
 
-        <!-- Question Card -->
-        <main class="question-card">
-            <div class="category-badge" id="category-badge">Probability</div>
-            <div class="question-text" id="question-text">
-                Loading...
-            </div>
-
-            <!-- Answer Input -->
-            <div class="answer-section" id="answer-section">
-                <input type="text" id="answer-input" class="answer-input" placeholder="Your answer..." inputmode="decimal" autocomplete="off">
-                <button id="submit-btn" class="submit-btn">Check</button>
+            <!-- Category Pills -->
+            <div class="category-pills">
+                <button class="pill active" data-category="all">All</button>
+                <button class="pill" data-category="mentalmath">Mental Math</button>
+                <button class="pill" data-category="probability">Probability</button>
+                <button class="pill" data-category="tvm">TVM</button>
+                <button class="pill" data-category="gametheory">Game Theory</button>
+                <button class="pill" data-category="stats">Stats</button>
+                <button class="pill" data-category="combinatorics">Counting</button>
             </div>
 
-            <!-- Multiple Choice (when applicable) -->
-            <div class="choices-section hidden" id="choices-section">
-                <button class="choice-btn" data-choice="0"></button>
-                <button class="choice-btn" data-choice="1"></button>
-                <button class="choice-btn" data-choice="2"></button>
-                <button class="choice-btn" data-choice="3"></button>
+            <!-- Question Card -->
+            <main class="question-card">
+                <div class="category-badge" id="category-badge">Probability</div>
+                <div class="question-text" id="question-text">
+                    Loading...
+                </div>
+
+                <!-- Answer Input -->
+                <div class="answer-section" id="answer-section">
+                    <input type="text" id="answer-input" class="answer-input" placeholder="Your answer..." inputmode="decimal" autocomplete="off">
+                    <button id="submit-btn" class="submit-btn">Check</button>
+                </div>
+
+                <!-- Multiple Choice (when applicable) -->
+                <div class="choices-section hidden" id="choices-section">
+                    <button class="choice-btn" data-choice="0"></button>
+                    <button class="choice-btn" data-choice="1"></button>
+                    <button class="choice-btn" data-choice="2"></button>
+                    <button class="choice-btn" data-choice="3"></button>
+                </div>
+
+                <!-- Result Feedback -->
+                <div class="result-section hidden" id="result-section">
+                    <div class="result-icon" id="result-icon">✓</div>
+                    <div class="result-text" id="result-text">Correct!</div>
+                    <div class="explanation" id="explanation"></div>
+                    <button id="next-btn" class="next-btn">Next Question →</button>
+                </div>
+            </main>
+
+            <!-- Skip button -->
+            <button id="skip-btn" class="skip-btn">Skip this one</button>
+        </section>
+
+        <!-- ==================== LIBRARY SECTION ==================== -->
+        <section id="library-section" class="app-section hidden">
+
+            <!-- Library Home (Folder List) -->
+            <div id="library-home" class="library-view">
+                <header class="header">
+                    <h1>Library</h1>
+                    <button id="new-folder-btn" class="icon-btn" title="New Folder">+</button>
+                </header>
+
+                <div id="folders-container" class="folders-grid">
+                    <!-- Folders render here -->
+                </div>
+
+                <div id="empty-library" class="empty-state">
+                    <div class="empty-icon">📚</div>
+                    <p>Your library is empty</p>
+                    <button id="create-first-folder" class="primary-btn">Create First Folder</button>
+                </div>
             </div>
 
-            <!-- Result Feedback -->
-            <div class="result-section hidden" id="result-section">
-                <div class="result-icon" id="result-icon">✓</div>
-                <div class="result-text" id="result-text">Correct!</div>
-                <div class="explanation" id="explanation"></div>
-                <button id="next-btn" class="next-btn">Next Question →</button>
-            </div>
-        </main>
+            <!-- Folder View (Contents of a folder) -->
+            <div id="folder-view" class="library-view hidden">
+                <header class="header">
+                    <button id="folder-back-btn" class="back-btn">←</button>
+                    <h1 id="folder-title">Folder Name</h1>
+                    <button id="folder-menu-btn" class="icon-btn">⋮</button>
+                </header>
 
-        <!-- Skip button -->
-        <button id="skip-btn" class="skip-btn">Skip this one</button>
+                <!-- Folder Menu Dropdown -->
+                <div id="folder-menu" class="dropdown-menu hidden">
+                    <button id="rename-folder-btn">Rename Folder</button>
+                    <button id="delete-folder-btn" class="danger">Delete Folder</button>
+                </div>
+
+                <div id="folder-contents" class="content-list">
+                    <!-- Content items render here -->
+                </div>
+
+                <div id="empty-folder" class="empty-state hidden">
+                    <div class="empty-icon">📄</div>
+                    <p>No content yet</p>
+                </div>
+
+                <!-- Add Content FAB -->
+                <button id="add-content-btn" class="fab">+</button>
+            </div>
+
+            <!-- Add Content Modal -->
+            <div id="add-content-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add Content</h2>
+                        <button id="close-add-modal" class="close-btn">×</button>
+                    </div>
+
+                    <!-- Content Type Tabs -->
+                    <div class="content-type-tabs">
+                        <button class="type-tab active" data-type="text">Paste Text</button>
+                        <button class="type-tab" data-type="file">Upload File</button>
+                        <button class="type-tab" data-type="url">Paste URL</button>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div id="text-input-section" class="input-section">
+                        <input type="text" id="content-title" class="input-field" placeholder="Title (optional)">
+                        <textarea id="content-text" class="textarea-field" placeholder="Paste your text here..."></textarea>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div id="file-input-section" class="input-section hidden">
+                        <div id="file-drop-zone" class="drop-zone">
+                            <div class="drop-icon">📁</div>
+                            <p>Drop file here or tap to browse</p>
+                            <p class="file-types">PDF, TXT, MD</p>
+                            <input type="file" id="file-input" accept=".pdf,.txt,.md,.text,.markdown" hidden>
+                        </div>
+                        <div id="file-preview" class="file-preview hidden">
+                            <span id="file-name"></span>
+                            <button id="clear-file" class="clear-btn">×</button>
+                        </div>
+                        <div id="file-processing" class="processing hidden">
+                            <div class="spinner"></div>
+                            <p>Processing file...</p>
+                        </div>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div id="url-input-section" class="input-section hidden">
+                        <input type="url" id="content-url" class="input-field" placeholder="https://example.com/article">
+                        <div id="url-processing" class="processing hidden">
+                            <div class="spinner"></div>
+                            <p>Fetching content...</p>
+                        </div>
+                        <div id="url-preview" class="url-preview hidden">
+                            <h4 id="url-preview-title"></h4>
+                            <p id="url-preview-excerpt"></p>
+                        </div>
+                    </div>
+
+                    <button id="save-content-btn" class="primary-btn full-width">Save to Library</button>
+                </div>
+            </div>
+
+            <!-- Reading View -->
+            <div id="reading-view" class="library-view hidden">
+                <header class="header reading-header">
+                    <button id="reading-back-btn" class="back-btn">←</button>
+                    <div class="reading-meta">
+                        <span id="reading-source" class="source-badge">TEXT</span>
+                        <span id="reading-date" class="reading-date"></span>
+                    </div>
+                    <button id="delete-content-btn" class="icon-btn danger-icon">🗑</button>
+                </header>
+
+                <article class="reading-content">
+                    <h1 id="reading-title"></h1>
+                    <div id="reading-body"></div>
+                </article>
+            </div>
+
+            <!-- New Folder Modal -->
+            <div id="new-folder-modal" class="modal hidden">
+                <div class="modal-content modal-small">
+                    <div class="modal-header">
+                        <h2 id="folder-modal-title">New Folder</h2>
+                        <button id="close-folder-modal" class="close-btn">×</button>
+                    </div>
+                    <input type="text" id="folder-name-input" class="input-field" placeholder="Folder name">
+                    <button id="save-folder-btn" class="primary-btn full-width">Create Folder</button>
+                </div>
+            </div>
+
+            <!-- Confirm Delete Modal -->
+            <div id="confirm-modal" class="modal hidden">
+                <div class="modal-content modal-small">
+                    <div class="modal-header">
+                        <h2>Confirm Delete</h2>
+                    </div>
+                    <p id="confirm-message">Are you sure?</p>
+                    <div class="modal-actions">
+                        <button id="confirm-cancel" class="secondary-btn">Cancel</button>
+                        <button id="confirm-delete" class="danger-btn">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
     </div>
 
     <script src="questions.js"></script>
     <script src="app.js"></script>
+    <script src="library.js"></script>
 </body>
 </html>
