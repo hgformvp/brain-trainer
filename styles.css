@@ -140,6 +140,7 @@ body {
 .category-badge.gametheory { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
 .category-badge.stats { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
 .category-badge.combinatorics { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+.category-badge.distressedcredit { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
 .question-text {
     font-size: 20px;

@@ -41,7 +41,8 @@
         tvm: 'Time Value',
         gametheory: 'Game Theory',
         stats: 'Statistics',
-        combinatorics: 'Combinatorics'
+        combinatorics: 'Combinatorics',
+        distressedcredit: 'Distressed Credit'
     };
 
     // Initialize

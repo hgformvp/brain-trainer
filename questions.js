@@ -1023,6 +1023,137 @@ const Questions = {
                 explanation: `${total} × ${split}% = ${yourPart}`
             };
         }
+    ],
+
+    // ==========================================
+    // DISTRESSED CREDIT
+    // ==========================================
+    distressedcredit: [
+        // Question 1: Debt Service Coverage Ratio (DSCR)
+        () => {
+            const ebitda = [60, 70, 80, 85, 90, 100, 120][Math.floor(Math.random() * 7)];
+            const debtServiceOptions = [50, 55, 60, 65, 70, 75].filter(ds => ds < ebitda);
+            const debtService = debtServiceOptions[Math.floor(Math.random() * debtServiceOptions.length)];
+            const covenant = [1.10, 1.15, 1.20, 1.25][Math.floor(Math.random() * 4)];
+
+            const dscr = Math.round((ebitda / debtService) * 100) / 100;
+            const passesCovenant = dscr >= covenant;
+            const headroom = Math.round(((dscr / covenant) - 1) * 100);
+
+            return {
+                question: `A company has $${ebitda}M EBITDA and $${debtService}M in annual debt service. What is the DSCR? (round to 2 decimal places)`,
+                answer: dscr,
+                tolerance: 0.02,
+                explanation: `DSCR = EBITDA / Debt Service = $${ebitda}M / $${debtService}M = ${dscr.toFixed(2)}x. ${passesCovenant ? `At ${dscr.toFixed(2)}x, this passes the ${covenant.toFixed(2)}x covenant with ${headroom}% headroom before breach.` : `At ${dscr.toFixed(2)}x, this FAILS the ${covenant.toFixed(2)}x covenant requirement.`}`
+            };
+        },
+
+        // Question 2: Leverage Multiple + Stress Test
+        () => {
+            const debt = [300, 400, 500, 600, 750, 800][Math.floor(Math.random() * 6)];
+            const ebitdaOptions = [60, 70, 80, 90, 100, 120].filter(e => {
+                const lev = debt / e;
+                return lev >= 3 && lev <= 9;
+            });
+            const ebitda = ebitdaOptions[Math.floor(Math.random() * ebitdaOptions.length)] || 80;
+            const stress = [15, 20, 25, 30][Math.floor(Math.random() * 4)];
+
+            const currentLeverage = Math.round((debt / ebitda) * 100) / 100;
+            const stressedEbitda = ebitda * (1 - stress / 100);
+            const stressedLeverage = Math.round((debt / stressedEbitda) * 100) / 100;
+
+            return {
+                question: `A company has $${debt}M total debt and $${ebitda}M EBITDA (current leverage = ${currentLeverage.toFixed(1)}x). If EBITDA drops ${stress}%, what is the stressed leverage? (round to 1 decimal)`,
+                answer: stressedLeverage,
+                tolerance: 0.1,
+                explanation: `Current leverage = $${debt}M / $${ebitda}M = ${currentLeverage.toFixed(2)}x. Stressed EBITDA = $${ebitda}M × (1 - ${stress}%) = $${stressedEbitda.toFixed(1)}M. Stressed leverage = $${debt}M / $${stressedEbitda.toFixed(1)}M = ${stressedLeverage.toFixed(2)}x`
+            };
+        },
+
+        // Question 3: Interest Coverage Ratio
+        () => {
+            const ebit = [30, 40, 50, 60, 75, 80][Math.floor(Math.random() * 6)];
+            const interestOptions = [20, 25, 30, 35, 40].filter(i => i < ebit);
+            const interest = interestOptions[Math.floor(Math.random() * interestOptions.length)];
+
+            const coverage = Math.round((ebit / interest) * 10) / 10;
+            const cushion = ebit - interest;
+
+            return {
+                question: `A company has $${ebit}M EBIT and $${interest}M in annual interest expense. What is the interest coverage ratio? (round to 1 decimal place)`,
+                answer: coverage,
+                tolerance: 0.1,
+                explanation: `Interest Coverage = EBIT / Interest = $${ebit}M / $${interest}M = ${coverage.toFixed(1)}x. This company's EBIT would need to fall $${cushion}M (to exactly $${interest}M) before it can no longer cover interest.`
+            };
+        },
+
+        // Question 4: Distressed Bond Yield (Approximate YTM)
+        () => {
+            const scenarios = [
+                { price: 650, coupon: 8, years: 3, ytm: 18.3 },
+                { price: 700, coupon: 9, years: 4, ytm: 17.1 },
+                { price: 550, coupon: 10, years: 5, ytm: 21.5 },
+                { price: 600, coupon: 7, years: 3, ytm: 20.9 },
+                { price: 750, coupon: 8, years: 5, ytm: 14.2 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const face = 1000;
+            const annualCoupon = face * s.coupon / 100;
+            const capitalGain = (face - s.price) / s.years;
+            const avgPrice = (face + s.price) / 2;
+
+            return {
+                question: `A bond with $1,000 face value is trading at $${s.price}. Coupon rate = ${s.coupon}%, ${s.years} years to maturity. What is the approximate yield to maturity? (as %, round to 1 decimal)`,
+                answer: s.ytm,
+                tolerance: 1.0,
+                explanation: `YTM ≈ (Annual Coupon + (Face - Price) / Years) / ((Face + Price) / 2)\n= ($${annualCoupon} + ($${face} - $${s.price}) / ${s.years}) / (($${face} + $${s.price}) / 2)\n= ($${annualCoupon} + $${capitalGain.toFixed(0)}) / $${avgPrice}\n= $${(annualCoupon + capitalGain).toFixed(0)} / $${avgPrice} ≈ ${s.ytm}%`
+            };
+        },
+
+        // Question 5: Cash-on-Cash Return
+        () => {
+            const noi = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0][Math.floor(Math.random() * 6)];
+            const debtServiceOptions = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8].filter(ds => ds < noi);
+            const debtService = debtServiceOptions[Math.floor(Math.random() * debtServiceOptions.length)];
+            const equity = [4, 5, 6, 8, 10][Math.floor(Math.random() * 5)];
+
+            const cashFlow = noi - debtService;
+            const cashOnCash = Math.round((cashFlow / equity) * 1000) / 10;
+
+            return {
+                question: `An investment property has NOI of $${noi}M and annual debt service of $${debtService}M. Equity invested = $${equity}M. What is the cash-on-cash return? (as %, round to 1 decimal)`,
+                answer: cashOnCash,
+                tolerance: 0.2,
+                explanation: `Cash flow to equity = NOI - Debt Service = $${noi}M - $${debtService}M = $${cashFlow.toFixed(1)}M. Cash-on-cash return = $${cashFlow.toFixed(1)}M / $${equity}M = ${cashOnCash.toFixed(1)}%`
+            };
+        },
+
+        // Question 6: LBO Returns (MOIC + IRR Approximation)
+        () => {
+            const scenarios = [
+                { entryMult: 5, entryEbitda: 50, equityPct: 30, exitMult: 7, exitEbitda: 70, years: 4, moic: 4.2 },
+                { entryMult: 6, entryEbitda: 40, equityPct: 35, exitMult: 7, exitEbitda: 55, years: 5, moic: 2.7 },
+                { entryMult: 5, entryEbitda: 60, equityPct: 40, exitMult: 6, exitEbitda: 80, years: 4, moic: 2.5 },
+                { entryMult: 4, entryEbitda: 50, equityPct: 30, exitMult: 5, exitEbitda: 65, years: 3, moic: 3.1 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+
+            const entryEV = s.entryMult * s.entryEbitda;
+            const equityCheck = entryEV * s.equityPct / 100;
+            const debtAtEntry = entryEV - equityCheck;
+            const exitEV = s.exitMult * s.exitEbitda;
+            const equityAtExit = exitEV - debtAtEntry;
+
+            // Approximate IRR using simplified formula
+            const approxIRR = Math.round(Math.pow(s.moic, 1/s.years) * 100 - 100);
+
+            return {
+                question: `LBO: Buy at ${s.entryMult}x on $${s.entryEbitda}M EBITDA. Equity check = $${equityCheck}M (${s.equityPct}% of purchase price). Sell at ${s.exitMult}x on $${s.exitEbitda}M EBITDA in ${s.years} years. Assume debt stays constant. What is the MOIC? (round to 1 decimal)`,
+                answer: s.moic,
+                tolerance: 0.2,
+                explanation: `Entry EV = ${s.entryMult}x × $${s.entryEbitda}M = $${entryEV}M. Debt at entry = $${entryEV}M - $${equityCheck}M = $${debtAtEntry}M. Exit EV = ${s.exitMult}x × $${s.exitEbitda}M = $${exitEV}M. Equity at exit = $${exitEV}M - $${debtAtEntry}M = $${equityAtExit}M. MOIC = $${equityAtExit}M / $${equityCheck}M = ${s.moic}x. A ${s.moic}x return in ${s.years} years ≈ ${approxIRR}% IRR.`
+            };
+        }
     ]
 };
 
