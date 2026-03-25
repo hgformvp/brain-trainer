@@ -126,7 +126,6 @@
         } else {
             elements.answerSection.classList.remove('hidden');
             elements.choicesSection.classList.add('hidden');
-            elements.answerInput.focus();
         }
 
         // Show skip button
