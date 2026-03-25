@@ -820,6 +820,52 @@
             console.error('Error loading library:', e);
             library = { folders: [] };
         }
+
+        // Ensure default Poker GTO folders exist
+        ensureDefaultFolders();
+    }
+
+    function ensureDefaultFolders() {
+        const defaultFolders = [
+            { name: 'GTO Foundations', noteTitle: 'GTO Foundations — Study Notes' },
+            { name: 'Preflop Ranges by Position', noteTitle: 'Preflop Ranges by Position — Study Notes' },
+            { name: 'Bet Sizing & Pot Odds', noteTitle: 'Bet Sizing & Pot Odds — Study Notes' },
+            { name: 'Range Construction & Blockers', noteTitle: 'Range Construction & Blockers — Study Notes' },
+            { name: 'Postflop Concepts', noteTitle: 'Postflop Concepts — Study Notes' },
+            { name: 'Exploitative Deviations', noteTitle: 'Exploitative Deviations — Study Notes' },
+            { name: 'Blind vs. Blind Strategy', noteTitle: 'Blind vs. Blind Strategy — Study Notes' },
+            { name: 'Scenario Quiz Bank', noteTitle: 'Scenario Quiz Bank — Study Notes' }
+        ];
+
+        const placeholderContent = 'Add your notes here. Paste articles, solver outputs, or hand histories to build your reference library.';
+
+        let foldersAdded = false;
+
+        for (const folderDef of defaultFolders) {
+            // Check if folder already exists (by name)
+            const exists = library.folders.some(f => f.name === folderDef.name);
+            if (!exists) {
+                const folder = {
+                    id: generateId(),
+                    name: folderDef.name,
+                    items: [{
+                        id: generateId(),
+                        title: folderDef.noteTitle,
+                        content: placeholderContent,
+                        sourceType: 'text',
+                        sourceUrl: null,
+                        createdAt: Date.now()
+                    }],
+                    createdAt: Date.now()
+                };
+                library.folders.push(folder);
+                foldersAdded = true;
+            }
+        }
+
+        if (foldersAdded) {
+            saveLibrary();
+        }
     }
 
     // ==========================================

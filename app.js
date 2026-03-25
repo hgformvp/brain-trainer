@@ -40,6 +40,7 @@
         probability: 'Probability',
         tvm: 'Time Value',
         gametheory: 'Game Theory',
+        poker_gto: 'Poker GTO',
         stats: 'Statistics',
         combinatorics: 'Combinatorics',
         distressedcredit: 'Distressed Credit'

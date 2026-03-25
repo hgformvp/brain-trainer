@@ -138,6 +138,7 @@ body {
 .category-badge.probability { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
 .category-badge.tvm { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
 .category-badge.gametheory { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.category-badge.poker_gto { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
 .category-badge.stats { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
 .category-badge.combinatorics { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
 .category-badge.distressedcredit { background: rgba(239, 68, 68, 0.2); color: #f87171; }

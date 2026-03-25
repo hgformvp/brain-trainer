@@ -1154,6 +1154,254 @@ const Questions = {
                 explanation: `Entry EV = ${s.entryMult}x × $${s.entryEbitda}M = $${entryEV}M. Debt at entry = $${entryEV}M - $${equityCheck}M = $${debtAtEntry}M. Exit EV = ${s.exitMult}x × $${s.exitEbitda}M = $${exitEV}M. Equity at exit = $${exitEV}M - $${debtAtEntry}M = $${equityAtExit}M. MOIC = $${equityAtExit}M / $${equityCheck}M = ${s.moic}x. A ${s.moic}x return in ${s.years} years ≈ ${approxIRR}% IRR.`
             };
         }
+    ],
+
+    // ==========================================
+    // POKER GTO
+    // ==========================================
+    poker_gto: [
+        // Q1: Preflop Position Decision
+        () => {
+            const scenarios = [
+                { position: 'BTN', hand: 'K♠J♦', action: 'Raise', rfiPct: 48, reason: 'KJo is in the BTN RFI range (~48% of hands)' },
+                { position: 'UTG', hand: 'T♠8♠', action: 'Fold', rfiPct: 15, reason: 'T8s is outside UTG RFI range (~15% of hands)' },
+                { position: 'CO', hand: 'A♦7♦', action: 'Raise', rfiPct: 27, reason: 'A7s is in CO range — suited aces play well' },
+                { position: 'SB', hand: 'Q♣6♦', action: 'Raise', rfiPct: 52, reason: 'SB opens wide (~52%) and Q6o qualifies' },
+                { position: 'BTN', hand: '7♠2♦', action: 'Fold', rfiPct: 48, reason: '72o is not in any standard BTN range' },
+                { position: 'UTG', hand: 'A♥Q♦', action: 'Raise', rfiPct: 15, reason: 'AQo is a premium hand, always in UTG range' },
+                { position: 'HJ', hand: 'J♦T♣', action: 'Raise', rfiPct: 20, reason: 'JTo is in HJ range (~20%) — connected broadways' },
+                { position: 'BTN', hand: 'A♣2♣', action: 'Raise', rfiPct: 48, reason: 'All suited aces are in BTN RFI range' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const correctIndex = s.action === 'Raise' ? 0 : 1;
+
+            return {
+                question: `[Preflop Decision] 100BB deep. Action folds to you in ${s.position}. You have ${s.hand}. What is the GTO action?`,
+                type: 'choice',
+                choices: ['Raise', 'Fold'],
+                correctIndex: correctIndex,
+                explanation: `${s.action}. ${s.reason}. ${s.position} RFI range is approximately ${s.rfiPct}% of hands.`
+            };
+        },
+
+        // Q2: 3-Bet or Call or Fold
+        () => {
+            const scenarios = [
+                { heroPos: 'CO', villainPos: 'BTN', hand: 'A♠T♠', action: 'Call', reason: 'ATs has good playability in position vs 3-bet. Calling keeps dominated hands in villain\'s range.' },
+                { heroPos: 'BTN', villainPos: 'SB', hand: 'K♦Q♣', action: 'Call', reason: 'KQo is borderline but playable in position. 4-betting risks getting it in dominated.' },
+                { heroPos: 'UTG', villainPos: 'BB', hand: '7♠7♦', action: 'Call', reason: 'Set mining with 77. Good implied odds at 100BB. We realize equity postflop.' },
+                { heroPos: 'BTN', villainPos: 'SB', hand: 'A♥A♣', action: '4-Bet', reason: 'AA is always a 4-bet for value. We want to build the pot and get stacks in.' },
+                { heroPos: 'CO', villainPos: 'BB', hand: 'A♦4♦', action: '4-Bet', reason: 'A4s is a 4-bet bluff — ace blocker reduces villain\'s AA/AK combos, suited for playability if called.' },
+                { heroPos: 'BTN', villainPos: 'BB', hand: 'T♥9♥', action: 'Call', reason: 'T9s has excellent playability and implied odds in position. Too strong to fold, wrong hand to 4-bet.' },
+                { heroPos: 'UTG', villainPos: 'BTN', hand: 'Q♠Q♣', action: '4-Bet', reason: 'QQ is strong enough to 4-bet for value vs a BTN 3-bet. We want action from worse hands.' },
+                { heroPos: 'CO', villainPos: 'SB', hand: '5♣5♦', action: 'Call', reason: '55 has set mining value. At 100BB, implied odds favor calling over 4-betting or folding.' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const actionToIndex = { '4-Bet': 0, 'Call': 1, 'Fold': 2 };
+
+            return {
+                question: `[3-Bet Response] You open ${s.heroPos}, ${s.villainPos} 3-bets. You have ${s.hand}. 100BB effective. What do you do?`,
+                type: 'choice',
+                choices: ['4-Bet', 'Call', 'Fold'],
+                correctIndex: actionToIndex[s.action],
+                explanation: `${s.action}. ${s.reason}`
+            };
+        },
+
+        // Q3: Bluff Frequency Calculation
+        () => {
+            const scenarios = [
+                { betPct: 50, pot: 100, bluffPct: 33 },
+                { betPct: 100, pot: 100, bluffPct: 50 },
+                { betPct: 33, pot: 100, bluffPct: 25 },
+                { betPct: 75, pot: 100, bluffPct: 43 },
+                { betPct: 125, pot: 100, bluffPct: 56 },
+                { betPct: 25, pot: 100, bluffPct: 20 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const bet = s.pot * s.betPct / 100;
+            const bluffFreq = Math.round((bet / (bet + s.pot)) * 100);
+
+            return {
+                question: `[Bluff Frequency] You bet $${bet} into a $${s.pot} pot on the river. To remain unexploitable, what % of your betting range should be bluffs? (round to nearest whole %)`,
+                answer: bluffFreq,
+                tolerance: 2,
+                explanation: `Bluff % = Bet / (Bet + Pot) = $${bet} / ($${bet} + $${s.pot}) = $${bet} / $${bet + s.pot} = ${bluffFreq}%. This makes opponent indifferent between calling and folding with their bluff-catchers.`
+            };
+        },
+
+        // Q4: Minimum Defense Frequency (MDF)
+        () => {
+            const scenarios = [
+                { pot: 100, bet: 50 },
+                { pot: 100, bet: 100 },
+                { pot: 120, bet: 80 },
+                { pot: 200, bet: 100 },
+                { pot: 150, bet: 150 },
+                { pot: 100, bet: 33 },
+                { pot: 200, bet: 150 }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const mdf = Math.round((s.pot / (s.pot + s.bet)) * 100);
+
+            return {
+                question: `[MDF Calculation] Pot is $${s.pot}. Opponent bets $${s.bet}. What % of your range must you defend to prevent opponent from profiting with any bluff? (as %)`,
+                answer: mdf,
+                tolerance: 2,
+                explanation: `MDF = Pot / (Pot + Bet) = $${s.pot} / ($${s.pot} + $${s.bet}) = $${s.pot} / $${s.pot + s.bet} = ${mdf}%. If you fold more than ${100 - mdf}%, opponent profits by bluffing any two cards.`
+            };
+        },
+
+        // Q5: Pot Odds + Required Equity
+        () => {
+            const scenarios = [
+                { pot: 200, bet: 100, draw: 'flush draw', outs: 9, cards: 1, profitable: false },
+                { pot: 100, bet: 25, draw: 'flush draw', outs: 9, cards: 1, profitable: false },
+                { pot: 100, bet: 50, draw: 'open-ended straight draw', outs: 8, cards: 1, profitable: false },
+                { pot: 200, bet: 50, draw: 'flush draw', outs: 9, cards: 2, profitable: true },
+                { pot: 100, bet: 100, draw: 'set draw', outs: 2, cards: 1, profitable: false }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const equityNeeded = Math.round((s.bet / (s.pot + s.bet)) * 100);
+            const equityHave = s.outs * (s.cards === 2 ? 4 : 2);
+            const callResult = s.profitable ? 'Yes' : 'No';
+
+            return {
+                question: `[Pot Odds] Pot is $${s.pot}. Opponent bets $${s.bet}. You have a ${s.draw} (${s.outs} outs) with ${s.cards} card${s.cards > 1 ? 's' : ''} to come. What equity do you need to call? (as %)`,
+                answer: equityNeeded,
+                tolerance: 1,
+                explanation: `Equity needed = Bet / (Pot + Bet) = $${s.bet} / $${s.pot + s.bet} = ${equityNeeded}%. Your equity = ${s.outs} outs × ${s.cards === 2 ? 4 : 2} = ${equityHave}%. ${equityHave >= equityNeeded ? 'Profitable call — you have enough equity.' : 'Not profitable without implied odds — you need ' + equityNeeded + '% but only have ' + equityHave + '%.'}`
+            };
+        },
+
+        // Q6: Blocker Identification
+        () => {
+            const scenarios = [
+                { board: 'A♥K♥Q♥J♥2♦', hand: 'T♥8♣', answer: 'Favors bluffing', reason: 'T♥ blocks the royal flush and many nut flush combos. Villain less likely to have the nuts.' },
+                { board: 'K♠Q♦J♣2♥7♦', hand: 'A♠T♦', answer: 'Favors bluffing', reason: 'AT blocks the nut straight (AK-QJ-T). Villain has fewer nut combos to call with.' },
+                { board: '9♣8♣7♦2♥K♠', hand: '6♣5♣', answer: 'Neutral impact', reason: '6 blocks some straights but you also block flush draws. Mixed blocker effect.' },
+                { board: 'A♠A♦K♥Q♣J♠', hand: 'A♣9♦', answer: 'Favors hero calling', reason: 'Holding an Ace blocks quads and most full houses. Villain\'s value range is reduced.' },
+                { board: 'J♠T♠9♠2♦4♣', hand: 'Q♠8♦', answer: 'Favors bluffing', reason: 'Q♠ blocks nut flush, Q blocks top straight (KQ). Great bluff candidate.' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const answerToIndex = { 'Favors bluffing': 0, 'Favors hero calling': 1, 'Neutral impact': 2 };
+
+            return {
+                question: `[Blocker Analysis] Board: ${s.board}. You have ${s.hand}. How do your blockers affect the decision?`,
+                type: 'choice',
+                choices: ['Favors bluffing', 'Favors hero calling', 'Neutral impact'],
+                correctIndex: answerToIndex[s.answer],
+                explanation: `${s.answer}. ${s.reason}`
+            };
+        },
+
+        // Q7: Range Advantage Identification
+        () => {
+            const scenarios = [
+                { setup: 'BTN opens, BB calls', flop: 'K♠7♦2♣', advantage: 'Opener', reason: 'BTN has more Kx combos, overpairs (AA, KK, QQ). Dry board favors preflop aggressor.' },
+                { setup: 'UTG opens, BTN calls', flop: 'A♥J♣T♦', advantage: 'Opener', reason: 'UTG has more AJ, AT, AA, AK in range. BTN flatting range is capped.' },
+                { setup: 'BTN opens, BB calls', flop: '6♠5♣4♦', advantage: 'Caller', reason: 'BB defends many suited connectors like 76s, 54s, 87s. Low connected boards favor BB.' },
+                { setup: 'CO opens, BB calls', flop: 'Q♦9♣3♠', advantage: 'Opener', reason: 'CO has more QQ, AQ, KQ in range. BB\'s range is weighted toward speculative hands.' },
+                { setup: 'BTN opens, BB calls', flop: 'J♥T♣9♦', advantage: 'Caller', reason: 'BB defends many suited connectors and one-gappers (QT, 87, T8). Coordinated board.' },
+                { setup: 'SB opens, BB calls', flop: 'A♦A♠5♣', advantage: 'Opener', reason: 'SB opens wider and has more Ax. Paired ace boards favor the aggressor.' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const answerToIndex = { 'Opener': 0, 'Caller': 1, 'Neither (roughly equal)': 2 };
+
+            return {
+                question: `[Range Advantage] ${s.setup}. Flop: ${s.flop}. Who has range advantage?`,
+                type: 'choice',
+                choices: ['Opener', 'Caller', 'Neither (roughly equal)'],
+                correctIndex: answerToIndex[s.advantage],
+                explanation: `${s.advantage} has range advantage. ${s.reason}`
+            };
+        },
+
+        // Q8: BvB 3-Bet Range Assessment
+        () => {
+            const scenarios = [
+                { hand: 'Q♠Q♦', action: '3-Bet', reason: 'QQ is top of the value 3-bet range vs SB open. Build the pot with a premium.' },
+                { hand: 'A♣5♣', action: '3-Bet', reason: 'A5s is a standard 3-bet bluff — blocks strong aces, can make straights and flushes.' },
+                { hand: 'K♦J♣', action: 'Call', reason: 'KJo is in the calling region — too strong to fold, but not strong enough to 3-bet for value.' },
+                { hand: '7♥7♣', action: 'Call', reason: '77 is a call — set mining value, middling strength in the three-tier structure.' },
+                { hand: 'A♦3♣', action: '3-Bet', reason: 'A3o is a polarized 3-bet bluff. Ace blocker, fold to 4-bet. Part of ~19% 3-bet range.' },
+                { hand: 'A♠K♣', action: '3-Bet', reason: 'AKo is always 3-bet for value BvB. Top of range, want to build pot.' },
+                { hand: 'T♦8♦', action: 'Call', reason: 'T8s is a playable suited connector in the flat calling range. Good postflop playability.' },
+                { hand: 'K♣7♦', action: '3-Bet', reason: 'K7o is a polarized 3-bet bluff with a king blocker. Fold to 4-bet.' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const actionToIndex = { '3-Bet': 0, 'Call': 1, 'Fold': 2 };
+
+            return {
+                question: `[BvB Strategy] SB opens, you're in BB with ${s.hand}. 100BB effective. What is the GTO action?`,
+                type: 'choice',
+                choices: ['3-Bet', 'Call', 'Fold'],
+                correctIndex: actionToIndex[s.action],
+                explanation: `${s.action}. ${s.reason} BB 3-bet range vs SB is approximately 19% — split between value hands and polarized bluffs.`
+            };
+        },
+
+        // Q9: Thin Value Betting Decision
+        () => {
+            const scenarios = [
+                { hand: '9♠9♦', board: '7♠5♦4♣ → Q♦', action: 'Mostly bet', sizing: '75%', reason: '99 is still ahead of BB\'s check-call range. BB has few Qx combos — bet for value and protection.' },
+                { hand: 'K♥8♦', board: 'K♣J♦6♥ → Q♦', action: 'Mostly check', sizing: '25-33%', reason: 'K8 is devalued on the Q turn. Many Qx now beat us. Consider small blocking bet or check.' },
+                { hand: 'A♠J♦', board: 'A♥T♣3♦ → 7♠', action: 'Mostly bet', sizing: '66%', reason: 'TPTK is still strong. Bet for value against Tx, draws, and worse aces. Deny equity.' },
+                { hand: 'Q♥Q♣', board: 'K♠9♦4♣ → 2♥', action: 'Mostly check', sizing: 'N/A', reason: 'QQ has become a bluff-catcher on K-high board. BB\'s continue range has many Kx. Check and evaluate river.' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const actionToIndex = { 'Always check': 0, 'Mostly check': 1, 'Mostly bet': 2, 'Always bet': 3 };
+
+            return {
+                question: `[Thin Value] BTN opens ${s.hand}, BB calls. Board: ${s.board}. BB checks. What is the best turn action?`,
+                type: 'choice',
+                choices: ['Always check', 'Mostly check', 'Mostly bet', 'Always bet'],
+                correctIndex: actionToIndex[s.action],
+                explanation: `${s.action}${s.sizing !== 'N/A' ? ' (~' + s.sizing + ' pot)' : ''}. ${s.reason}`
+            };
+        },
+
+        // Q10: Stack Depth Preflop Adjustment
+        () => {
+            const scenarios = [
+                { depth: '100BB', position: 'BB', villain: 'HJ', hand: 'A♠K♣', action: '3-Bet', reason: 'At 100BB, AKo is a standard 3-bet for value. We want to build the pot with a premium.' },
+                { depth: '300BB', position: 'BB', villain: 'HJ', hand: 'A♠K♣', action: 'Call', reason: 'At 300BB, AKo has reverse implied odds — TPTK can lose big pots. Flatting keeps dominated hands in.' },
+                { depth: '100BB', position: 'BTN', villain: 'CO', hand: 'J♥T♥', action: 'Call', reason: 'JTs has good implied odds at 100BB. Calling in position, looking to make big hands postflop.' },
+                { depth: '200BB', position: 'BTN', villain: 'CO', hand: 'J♥T♥', action: 'Call', reason: 'JTs implied odds increase deep. Suited connectors love deep stacks — call.' },
+                { depth: '100BB', position: 'BB', villain: 'BTN', hand: '9♦9♣', action: '3-Bet', reason: 'At 100BB, 99 is a mix of 3-bet and call. 3-betting is standard vs BTN.' },
+                { depth: '300BB', position: 'BB', villain: 'BTN', hand: '9♦9♣', action: 'Call', reason: 'At 300BB, set mining EV increases. Avoid bloated pots — call and play postflop.' },
+                { depth: '100BB', position: 'SB', villain: 'BTN', hand: 'K♠Q♠', action: '3-Bet', reason: 'KQs is a 3-bet at 100BB for value/protection. Standard squeeze spot.' },
+                { depth: '300BB', position: 'SB', villain: 'BTN', hand: 'K♠Q♠', action: 'Call', reason: 'At 300BB, KQs has reverse implied odds with TPTK. Stack-to-pot ratio favors speculative play.' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+            const actionToIndex = { '3-Bet': 0, 'Call': 1, 'Fold': 2 };
+
+            return {
+                question: `[Stack Depth] ${s.depth} effective. ${s.villain} opens, you're in ${s.position} with ${s.hand}. What is the optimal action?`,
+                type: 'choice',
+                choices: ['3-Bet', 'Call', 'Fold'],
+                correctIndex: actionToIndex[s.action],
+                explanation: `${s.action}. ${s.reason}`
+            };
+        },
+
+        // Q11: Backdoor Draw Math
+        () => {
+            const scenarios = [
+                { pot: 100, bet: 25, betPct: 25, hand: '5♦5♣', draw: 'backdoor flush draw', equityNeeded: 20, equityHave: 22, action: 'Call' },
+                { pot: 100, bet: 33, betPct: 33, hand: '7♥7♦', draw: 'no backdoors', equityNeeded: 25, equityHave: 17, action: 'Fold' },
+                { pot: 100, bet: 25, betPct: 25, hand: '8♦8♣', draw: 'backdoor flush draw', equityNeeded: 20, equityHave: 21, action: 'Call' },
+                { pot: 100, bet: 33, betPct: 33, hand: '6♠6♣', draw: 'no backdoors', equityNeeded: 25, equityHave: 14, action: 'Fold' }
+            ];
+            const s = scenarios[Math.floor(Math.random() * scenarios.length)];
+
+            return {
+                question: `[Backdoor Math] Pot is $${s.pot}. Opponent c-bets $${s.bet} (${s.betPct}% pot). You have ${s.hand} with ${s.draw}. What equity do you need to continue? (as %)`,
+                answer: s.equityNeeded,
+                tolerance: 1,
+                explanation: `Equity needed = $${s.bet} / $${s.pot + s.bet} = ${s.equityNeeded}%. Your equity breakdown: set draw (~8.5%), ${s.draw === 'no backdoors' ? 'no backdoor boost' : 'backdoor flush (~3-4%)'}, some showdown value. Total ≈ ${s.equityHave}%. ${s.equityHave >= s.equityNeeded ? 'Call — barely profitable with backdoor potential.' : 'Fold — insufficient equity without backdoors.'}`
+            };
+        }
     ]
 };
 
