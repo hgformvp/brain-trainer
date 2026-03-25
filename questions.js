@@ -438,6 +438,101 @@ const Questions = {
                 tolerance: 0.5,
                 explanation: `Weighted avg = (${grade1} × ${weight1}% + ${grade2} × ${weight2}%) = ${weighted}`
             };
+        },
+
+        // Portfolio Weighted Return
+        () => {
+            // Generate 3 weights that sum to 100
+            const w1 = [30, 35, 40, 45, 50][Math.floor(Math.random() * 5)];
+            const w2 = [25, 30, 35][Math.floor(Math.random() * 3)];
+            const w3 = 100 - w1 - w2;
+
+            // Generate returns between -10% and +20%
+            const r1 = Math.floor(Math.random() * 31) - 10;
+            const r2 = Math.floor(Math.random() * 31) - 10;
+            const r3 = Math.floor(Math.random() * 31) - 10;
+
+            const weightedReturn = Math.round(((w1 * r1 + w2 * r2 + w3 * r3) / 100) * 10) / 10;
+
+            const r1Str = r1 >= 0 ? `+${r1}` : `${r1}`;
+            const r2Str = r2 >= 0 ? `+${r2}` : `${r2}`;
+            const r3Str = r3 >= 0 ? `+${r3}` : `${r3}`;
+
+            return {
+                question: `You hold 3 positions: ${w1}% in Asset A returning ${r1Str}%, ${w2}% in Asset B returning ${r2Str}%, ${w3}% in Asset C returning ${r3Str}%. What is your portfolio's weighted return? (as %)`,
+                answer: weightedReturn,
+                tolerance: 0.5,
+                explanation: `(${w1}% × ${r1}) + (${w2}% × ${r2}) + (${w3}% × ${r3}) = ${(w1*r1/100).toFixed(2)} + ${(w2*r2/100).toFixed(2)} + ${(w3*r3/100).toFixed(2)} = ${weightedReturn}%`
+            };
+        },
+
+        // Altman Z-Score Component
+        () => {
+            const components = [
+                { name: 'Working Capital / Total Assets', weight: 1.2 },
+                { name: 'Retained Earnings / Total Assets', weight: 1.4 },
+                { name: 'EBIT / Total Assets', weight: 3.3 },
+                { name: 'Market Cap / Total Liabilities', weight: 0.6 },
+                { name: 'Sales / Total Assets', weight: 1.0 }
+            ];
+
+            const comp = components[Math.floor(Math.random() * components.length)];
+            // Ratio values from 0.05 to 0.50 in increments of 0.05
+            const ratioValue = (Math.floor(Math.random() * 10) + 1) * 0.05;
+            const contribution = Math.round(ratioValue * comp.weight * 100) / 100;
+
+            return {
+                question: `In the Altman Z-Score, ${comp.name} = ${ratioValue.toFixed(2)}, weighted at ${comp.weight}x. What is this component's contribution to the Z-Score?`,
+                answer: contribution,
+                tolerance: 0.02,
+                explanation: `${ratioValue.toFixed(2)} × ${comp.weight} = ${contribution.toFixed(2)}. Z-Score zones: Below 1.81 = distress, 1.81–2.99 = grey zone, above 2.99 = safe zone.`
+            };
+        },
+
+        // Regression to the Mean - Margin Forecasting
+        () => {
+            const industryAvg = [15, 18, 20, 22, 25][Math.floor(Math.random() * 5)];
+            const stdDev = [3, 4, 5, 6][Math.floor(Math.random() * 4)];
+            const numSDs = [1, 2][Math.floor(Math.random() * 2)];
+            const reversionPct = [25, 50, 75][Math.floor(Math.random() * 3)];
+
+            const currentMargin = industryAvg + (numSDs * stdDev);
+            const deviation = currentMargin - industryAvg;
+            const pullback = deviation * (reversionPct / 100);
+            const modeledMargin = currentMargin - pullback;
+
+            return {
+                question: `Industry avg EBITDA margin = ${industryAvg}%, std dev = ${stdDev}%. A company is currently at ${currentMargin}% (${numSDs} SD${numSDs > 1 ? 's' : ''} above average). Assuming ${reversionPct}% mean reversion, what margin do you model for next year?`,
+                answer: modeledMargin,
+                tolerance: 0.5,
+                explanation: `Current deviation = ${deviation}%. ${reversionPct}% reversion = ${pullback}% pullback. Modeled margin = ${currentMargin}% - ${pullback}% = ${modeledMargin}%`
+            };
+        },
+
+        // Poker Outs to Equity (Rule of 2 and 4)
+        () => {
+            const draws = [
+                { name: 'flush draw', outs: 9 },
+                { name: 'open-ended straight draw', outs: 8 },
+                { name: 'gutshot straight draw', outs: 4 },
+                { name: 'two overcards', outs: 6 },
+                { name: 'flush draw + gutshot', outs: 12 },
+                { name: 'set trying to fill up vs a flush draw', outs: 7 }
+            ];
+
+            const draw = draws[Math.floor(Math.random() * draws.length)];
+            const isFlop = Math.random() > 0.5;
+            const multiplier = isFlop ? 4 : 2;
+            const cardsTocome = isFlop ? '2 cards to come' : '1 card to come';
+            const street = isFlop ? 'flop' : 'turn';
+            const equity = draw.outs * multiplier;
+
+            return {
+                question: `You have a ${draw.name} (${draw.outs} outs) on the ${street} with ${cardsTocome}. Using the rule of ${multiplier}, your approximate equity is _____%`,
+                answer: equity,
+                tolerance: 2,
+                explanation: `Rule of ${multiplier}: ${draw.outs} outs × ${multiplier} = ${equity}% equity`
+            };
         }
     ],
 
