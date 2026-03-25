@@ -1,5 +1,5 @@
 // Service Worker for Brain Trainer - Offline Support
-const CACHE_NAME = 'brain-trainer-v1';
+const CACHE_NAME = 'brain-trainer-v2';
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
   '/styles.css',
   '/library.css',
   '/daily-drill.css',
+  '/performance.css',
   '/app.js',
   '/questions.js',
   '/library.js',
@@ -16,6 +17,7 @@ const ASSETS_TO_CACHE = [
   '/question-validator.js',
   '/question-generator.js',
   '/daily-drill.js',
+  '/performance.js',
   '/manifest.json',
   '/icon.svg'
 ];

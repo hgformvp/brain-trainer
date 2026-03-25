@@ -190,13 +190,25 @@
             btn.classList.toggle('active', btn.dataset.mode === mode);
         });
 
+        const statsSection = document.getElementById('stats-section');
+
         if (mode === 'train') {
             els.trainSection.classList.remove('hidden');
             els.librarySection.classList.add('hidden');
-        } else {
+            if (statsSection) statsSection.classList.add('hidden');
+        } else if (mode === 'library') {
             els.trainSection.classList.add('hidden');
             els.librarySection.classList.remove('hidden');
+            if (statsSection) statsSection.classList.add('hidden');
             showView('home');
+        } else if (mode === 'stats') {
+            els.trainSection.classList.add('hidden');
+            els.librarySection.classList.add('hidden');
+            if (statsSection) statsSection.classList.remove('hidden');
+            // Render dashboard when stats tab is opened
+            if (window.Performance && typeof window.Performance.renderDashboard === 'function') {
+                window.Performance.renderDashboard();
+            }
         }
     }
 

@@ -1405,9 +1405,23 @@ const Questions = {
     ]
 };
 
+// Subcategory mappings by category and question index
+const SUBCATEGORY_MAP = {
+    probability: ['basic_probability', 'basic_probability', 'expected_value', 'basic_probability', 'poker_hands', 'independent_events', 'pot_odds', 'bayes'],
+    tvm: ['simple_interest', 'future_value', 'present_value', 'rule_of_72', 'npv', 'npv', 'perpetuity', 'real_vs_nominal'],
+    gametheory: ['nash_equilibrium', 'nash_equilibrium', 'bluff_frequency', 'mdf', 'zero_sum', 'nash_equilibrium', 'auction_strategy', 'kelly_criterion'],
+    stats: ['mean_median', 'mean_median', 'standard_deviation', 'standard_deviation', 'base_rate', 'base_rate', 'regression_mean', 'base_rate', 'weighted_average', 'weighted_return', 'altman_zscore', 'regression_mean', 'outs_equity'],
+    combinatorics: ['factorial', 'permutations', 'combinations', 'combinations', 'counting', 'combinations', 'counting', 'counting'],
+    mentalmath: ['multiplication', 'multiplication', 'division', 'division', 'percentage', 'percentage', 'percentage_change', 'basis_points', 'basis_points', 'multiplication', 'multiples', 'multiples', 'multiples', 'multiplication', 'percentage', 'margin', 'margin', 'margin', 'margin', 'dilution', 'dilution', 'irr_approximation', 'irr_approximation', 'percentage', 'percentage'],
+    distressedcredit: ['dscr', 'leverage_stress', 'interest_coverage', 'bond_yield', 'cash_on_cash', 'lbo_moic'],
+    poker_gto: ['preflop_position', 'three_bet_decision', 'bluff_frequency_poker', 'mdf_calculation', 'pot_odds_equity', 'blocker_identification', 'range_advantage', 'bvb_strategy', 'thin_value', 'stack_depth', 'small_bet_defense']
+};
+
 // Get a random question from a specific category or all
 function getRandomQuestion(category = 'all') {
     let pool;
+    let categoryKey = category;
+
     if (category === 'all') {
         pool = Object.values(Questions).flat();
     } else {
@@ -1416,14 +1430,38 @@ function getRandomQuestion(category = 'all') {
 
     if (pool.length === 0) return null;
 
-    const generator = pool[Math.floor(Math.random() * pool.length)];
+    const generatorIndex = Math.floor(Math.random() * pool.length);
+    const generator = pool[generatorIndex];
     const question = generator();
 
     // Add category if not present
     if (!question.category) {
-        question.category = Object.entries(Questions).find(([cat, gens]) =>
+        const catEntry = Object.entries(Questions).find(([cat, gens]) =>
             gens.includes(generator)
-        )?.[0] || 'unknown';
+        );
+        if (catEntry) {
+            question.category = catEntry[0];
+            // Find generator index within that category
+            const catIndex = catEntry[1].indexOf(generator);
+            // Assign subcategory based on mapping
+            const subcats = SUBCATEGORY_MAP[catEntry[0]];
+            if (subcats && catIndex < subcats.length) {
+                question.subcategory = subcats[catIndex];
+            }
+        } else {
+            question.category = 'unknown';
+        }
+    }
+
+    // If subcategory not set but we know the category, try to assign
+    if (!question.subcategory && question.category && SUBCATEGORY_MAP[question.category]) {
+        // For category-specific selection, use the generator index
+        if (category !== 'all') {
+            const subcats = SUBCATEGORY_MAP[question.category];
+            if (subcats && generatorIndex < subcats.length) {
+                question.subcategory = subcats[generatorIndex];
+            }
+        }
     }
 
     return question;

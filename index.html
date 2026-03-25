@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="library.css">
     <link rel="stylesheet" href="daily-drill.css">
+    <link rel="stylesheet" href="performance.css">
 </head>
 <body>
     <div id="app">
@@ -20,6 +21,7 @@
         <nav class="mode-toggle">
             <button class="mode-btn active" data-mode="train">Train</button>
             <button class="mode-btn" data-mode="library">Library</button>
+            <button class="mode-btn" data-mode="stats">Stats</button>
         </nav>
 
         <!-- ==================== TRAIN SECTION ==================== -->
@@ -345,6 +347,16 @@
             </div>
 
         </section>
+
+        <!-- ==================== STATS SECTION ==================== -->
+        <section id="stats-section" class="app-section hidden">
+            <header class="header">
+                <h1>Performance</h1>
+            </header>
+            <div id="stats-content">
+                <!-- Dashboard renders here dynamically -->
+            </div>
+        </section>
     </div>
 
     <script src="questions.js"></script>
@@ -356,6 +368,7 @@
     <script src="question-validator.js"></script>
     <script src="question-generator.js"></script>
     <script src="daily-drill.js"></script>
+    <script src="performance.js"></script>
     <script>
         // Register service worker for offline support
         if ('serviceWorker' in navigator) {

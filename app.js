@@ -93,11 +93,22 @@
 
     // Load a new question
     function loadNewQuestion() {
-        currentQuestion = getRandomQuestion(currentCategory);
+        // Use adaptive weighting when selecting from all categories
+        if (currentCategory === 'all' && window.Performance) {
+            const weightedCategory = Performance.getWeightedRandomCategory();
+            currentQuestion = getRandomQuestion(weightedCategory);
+        } else {
+            currentQuestion = getRandomQuestion(currentCategory);
+        }
 
         if (!currentQuestion) {
             elements.questionText.textContent = 'No questions available for this category.';
             return;
+        }
+
+        // Start performance timer
+        if (window.Performance) {
+            Performance.startQuestionTimer();
         }
 
         // Reset UI
@@ -181,6 +192,15 @@
 
         updateStatsDisplay();
         saveStats();
+
+        // Record to performance tracking
+        if (window.Performance && currentQuestion) {
+            Performance.recordAnswer(
+                currentQuestion.category,
+                currentQuestion.subcategory || 'general',
+                isCorrect
+            );
+        }
 
         // Show result
         elements.resultIcon.textContent = isCorrect ? '✓' : '✗';

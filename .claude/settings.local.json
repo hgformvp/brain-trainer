@@ -12,7 +12,14 @@
       "Bash(node --check:*)",
       "Bash(ipconfig:*)",
       "Bash(findstr:*)",
-      "Bash(gh auth status:*)"
+      "Bash(gh auth status:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd PWA support, Daily Drill, and AI features\n\n- Service worker for offline support\n- Web app manifest for install-to-home-screen\n- Library section for personal knowledge base\n- Daily Drill with spaced repetition \\(SM-2\\)\n- Optional AI question generation and grading\n- Anthropic API integration \\(user provides key\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh repo create:*)",
+      "Bash(node -c:*)",
+      "Bash(node -e:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd 4 new calculation-based stats questions\n\n- Portfolio Weighted Return \\(3 assets, randomized weights/returns\\)\n- Altman Z-Score Component \\(5 components, randomized ratios\\)\n- Regression to Mean Margin Forecasting \\(industry avg, std dev, reversion\\)\n- Poker Outs to Equity \\(Rule of 2 and 4, common draw scenarios\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd Poker GTO category with 11 questions + 8 Library folders\n\nNew category: poker_gto with 11 question templates:\n1. Preflop Position Decision \\(RFI ranges\\)\n2. 3-Bet or Call or Fold Response\n3. Bluff Frequency Calculation\n4. Minimum Defense Frequency \\(MDF\\)\n5. Pot Odds + Required Equity\n6. Blocker Identification\n7. Range Advantage Identification\n8. BvB 3-Bet Range Assessment\n9. Thin Value Betting Decision\n10. Stack Depth Preflop Adjustment\n11. Backdoor Draw Math\n\nPre-loaded Library folders \\(Poker GTO section\\):\n- GTO Foundations\n- Preflop Ranges by Position\n- Bet Sizing & Pot Odds\n- Range Construction & Blockers\n- Postflop Concepts\n- Exploitative Deviations\n- Blind vs. Blind Strategy\n- Scenario Quiz Bank\n\nUI updates:\n- Teal badge color for Poker GTO\n- Category pill between Game Theory and Stats\n- Folders auto-created on first Library load\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
