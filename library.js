@@ -153,6 +153,12 @@
         els.readingBackBtn.addEventListener('click', () => showView('folder'));
         els.deleteContentBtn.addEventListener('click', confirmDeleteContent);
 
+        // Add to drill queue
+        const addToDrillBtn = document.getElementById('add-to-drill-btn');
+        if (addToDrillBtn) {
+            addToDrillBtn.addEventListener('click', addCurrentToDrillQueue);
+        }
+
         // Confirm modal
         els.confirmCancel.addEventListener('click', closeConfirmModal);
         els.confirmDelete.addEventListener('click', executeDelete);
@@ -349,16 +355,36 @@
         // Sort by date, newest first
         const sortedItems = [...folder.items].sort((a, b) => b.createdAt - a.createdAt);
 
-        els.folderContents.innerHTML = sortedItems.map(item => `
-            <div class="content-item" data-content-id="${item.id}">
-                <div class="content-item-header">
-                    <div class="content-item-title">${escapeHtml(item.title)}</div>
-                    <span class="source-badge ${item.sourceType}">${item.sourceType.toUpperCase()}</span>
+        els.folderContents.innerHTML = sortedItems.map(item => {
+            // Get drill status if available
+            let drillBadge = '';
+            if (window.DailyDrill) {
+                const status = window.DailyDrill.getTrackingStatus(item.id);
+                const hasQuestions = window.DailyDrill.hasQuestions(item.id);
+
+                if (status === 'mastered') {
+                    drillBadge = '<span class="drill-status-badge mastered">✓ Mastered</span>';
+                } else if (status === 'reviewing') {
+                    drillBadge = '<span class="drill-status-badge reviewing">📝 Reviewing</span>';
+                } else if (hasQuestions) {
+                    drillBadge = '<span class="drill-status-badge has-questions">📋 Has Questions</span>';
+                }
+            }
+
+            return `
+                <div class="content-item" data-content-id="${item.id}">
+                    <div class="content-item-header">
+                        <div class="content-item-title">${escapeHtml(item.title)}</div>
+                        <span class="source-badge ${item.sourceType}">${item.sourceType.toUpperCase()}</span>
+                    </div>
+                    <div class="content-item-excerpt">${escapeHtml(getExcerpt(item.content, 100))}</div>
+                    <div class="content-item-footer">
+                        <span class="content-item-date">${formatDate(item.createdAt)}</span>
+                        ${drillBadge}
+                    </div>
                 </div>
-                <div class="content-item-excerpt">${escapeHtml(getExcerpt(item.content, 100))}</div>
-                <div class="content-item-date">${formatDate(item.createdAt)}</div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Add click handlers
         els.folderContents.querySelectorAll('.content-item').forEach(item => {
@@ -475,6 +501,12 @@
         if (folder) {
             folder.items.push(item);
             saveLibrary();
+
+            // Notify Daily Drill about new content
+            if (window.DailyDrill && typeof window.DailyDrill.onContentAdded === 'function') {
+                window.DailyDrill.onContentAdded(item.id);
+            }
+
             closeAddContentModal();
             renderFolderContents();
         }
@@ -713,6 +745,26 @@
         pendingDeleteId = currentContentId;
         els.confirmMessage.textContent = `Delete "${item.title}"?`;
         els.confirmModal.classList.remove('hidden');
+    }
+
+    function addCurrentToDrillQueue() {
+        if (!currentContentId) return;
+
+        if (window.DailyDrill && typeof window.DailyDrill.addToQueue === 'function') {
+            window.DailyDrill.addToQueue(currentContentId);
+
+            // Visual feedback
+            const btn = document.getElementById('add-to-drill-btn');
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = '✓';
+                btn.style.color = 'var(--success)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.color = '';
+                }, 1500);
+            }
+        }
     }
 
     // ==========================================

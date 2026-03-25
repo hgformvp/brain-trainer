@@ -7,8 +7,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0a0a0f">
     <title>Brain Trainer</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="library.css">
+    <link rel="stylesheet" href="daily-drill.css">
 </head>
 <body>
     <div id="app">
@@ -83,6 +87,13 @@
                     <h1>Library</h1>
                     <button id="new-folder-btn" class="icon-btn" title="New Folder">+</button>
                 </header>
+
+                <!-- Daily Drill Entry Button -->
+                <button id="daily-drill-btn" class="daily-drill-entry-btn">
+                    <span class="drill-btn-icon">🎯</span>
+                    <span class="drill-btn-text">Daily Drill</span>
+                    <span class="drill-btn-arrow">→</span>
+                </button>
 
                 <div id="folders-container" class="folders-grid">
                     <!-- Folders render here -->
@@ -186,7 +197,10 @@
                         <span id="reading-source" class="source-badge">TEXT</span>
                         <span id="reading-date" class="reading-date"></span>
                     </div>
-                    <button id="delete-content-btn" class="icon-btn danger-icon">🗑</button>
+                    <div class="reading-actions">
+                        <button id="add-to-drill-btn" class="icon-btn" title="Add to Daily Drill">📋</button>
+                        <button id="delete-content-btn" class="icon-btn danger-icon">🗑</button>
+                    </div>
                 </header>
 
                 <article class="reading-content">
@@ -221,11 +235,132 @@
                 </div>
             </div>
 
+            <!-- ==================== DAILY DRILL VIEW ==================== -->
+            <div id="drill-view" class="library-view hidden">
+                <header class="header">
+                    <button id="drill-back-btn" class="back-btn">←</button>
+                    <h1>Daily Drill</h1>
+                    <div style="width: 40px;"></div>
+                </header>
+
+                <div id="drill-content">
+                    <!-- Drill content renders here dynamically -->
+                </div>
+            </div>
+
+            <!-- Drill Settings Modal -->
+            <div id="drill-settings-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Daily Drill Settings</h2>
+                        <button id="close-drill-settings" class="close-btn">×</button>
+                    </div>
+
+                    <div class="drill-setting-group">
+                        <div class="drill-setting-label">Session Length</div>
+                        <div class="drill-setting-options">
+                            <button class="drill-setting-option session-length-option" data-value="5">5 min</button>
+                            <button class="drill-setting-option session-length-option selected" data-value="12">12 min</button>
+                            <button class="drill-setting-option session-length-option" data-value="20">20 min</button>
+                        </div>
+                    </div>
+
+                    <div class="drill-setting-group">
+                        <div class="drill-setting-label">Max Reviews Per Session</div>
+                        <div class="drill-slider-container">
+                            <input type="range" id="max-reviews-slider" class="drill-slider" min="5" max="20" value="10">
+                            <span id="max-reviews-value" class="drill-slider-value">10</span>
+                        </div>
+                    </div>
+
+                    <div class="drill-setting-group">
+                        <div class="drill-setting-label">Focus Mode</div>
+                        <div class="drill-checkbox-row">
+                            <input type="checkbox" id="focus-mode-checkbox" class="drill-checkbox">
+                            <label for="focus-mode-checkbox" class="drill-checkbox-label">Drill one folder only</label>
+                        </div>
+                    </div>
+
+                    <div class="drill-setting-group">
+                        <div class="drill-setting-label">Reading Queue</div>
+                        <div class="drill-checkbox-row">
+                            <input type="radio" name="queue-mode" id="queue-mode-manual" class="drill-checkbox" checked>
+                            <label for="queue-mode-manual" class="drill-checkbox-label">Manual (I pick what's next)</label>
+                        </div>
+                        <div class="drill-checkbox-row">
+                            <input type="radio" name="queue-mode" id="queue-mode-auto" class="drill-checkbox">
+                            <label for="queue-mode-auto" class="drill-checkbox-label">Auto (rotate through folders)</label>
+                        </div>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <div class="drill-setting-group">
+                        <div class="drill-setting-label">AI Features</div>
+                        <div class="ai-key-section">
+                            <input type="password" id="api-key-input" class="input-field" placeholder="Anthropic API Key (sk-ant-...)">
+                            <div class="ai-key-actions">
+                                <button id="test-api-btn" class="secondary-btn">Test Connection</button>
+                                <span id="api-status" class="api-status"></span>
+                            </div>
+                            <p class="setting-hint">Your key is stored locally. Get one at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+                        </div>
+                    </div>
+
+                    <div class="drill-setting-group">
+                        <div class="drill-checkbox-row">
+                            <input type="checkbox" id="ai-auto-generate" class="drill-checkbox" checked>
+                            <label for="ai-auto-generate" class="drill-checkbox-label">Auto-generate questions</label>
+                        </div>
+                        <div class="drill-checkbox-row">
+                            <input type="checkbox" id="ai-smart-grading" class="drill-checkbox" checked>
+                            <label for="ai-smart-grading" class="drill-checkbox-label">Smart answer grading</label>
+                        </div>
+                    </div>
+
+                    <button id="save-drill-settings-btn" class="primary-btn full-width">Save</button>
+                </div>
+            </div>
+
+            <!-- Queue Management Modal -->
+            <div id="queue-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Reading Queue</h2>
+                        <button id="close-queue-modal" class="close-btn">×</button>
+                    </div>
+
+                    <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">
+                        Items at the top will be read first.
+                    </p>
+
+                    <div id="queue-list" class="queue-list">
+                        <!-- Queue items render here -->
+                    </div>
+
+                    <button id="add-to-queue-btn" class="secondary-btn full-width">+ Add from Library</button>
+                </div>
+            </div>
+
         </section>
     </div>
 
     <script src="questions.js"></script>
     <script src="app.js"></script>
     <script src="library.js"></script>
+    <script src="config.js"></script>
+    <script src="api-client.js"></script>
+    <script src="spaced-repetition.js"></script>
+    <script src="question-validator.js"></script>
+    <script src="question-generator.js"></script>
+    <script src="daily-drill.js"></script>
+    <script>
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log('Service worker registered'))
+                .catch((err) => console.log('Service worker failed:', err));
+        }
+    </script>
 </body>
 </html>
