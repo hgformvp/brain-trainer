@@ -1,354 +1,338 @@
-/* Reset and base styles */
+/* ============================================================
+   BRAIN TRAINER — Quartr-inspired Design System
+   ============================================================ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 :root {
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #13131a;
-    --bg-card: #1a1a24;
-    --bg-hover: #252532;
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0b0;
-    --text-muted: #606070;
-    --accent: #6366f1;
-    --accent-hover: #818cf8;
-    --success: #22c55e;
-    --success-bg: rgba(34, 197, 94, 0.15);
-    --error: #ef4444;
-    --error-bg: rgba(239, 68, 68, 0.15);
-    --warning: #f59e0b;
-    --border: #2a2a3a;
+    --bg-primary:   #000000;
+    --bg-card:      #1C1C1E;
+    --bg-elevated:  #2C2C2E;
+    --bg-control:   #3A3A3C;
+
+    /* Legacy aliases so library/drill CSS doesn't break */
+    --bg-secondary: #1C1C1E;
+    --bg-hover:     #2C2C2E;
+
+    --text-primary:   #FFFFFF;
+    --text-secondary: #8E8E93;
+    --text-muted:     #48484A;
+
+    --accent:       #30A46C;
+    --accent-light: rgba(48, 164, 108, 0.18);
+    --accent-hover: #38C07D;
+
+    --success:    #30A46C;
+    --success-bg: rgba(48, 164, 108, 0.15);
+    --error:      #FF453A;
+    --error-bg:   rgba(255, 69, 58, 0.15);
+    --warning:    #FF9F0A;
+
+    --border:    rgba(255,255,255,0.08);
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
 }
 
 html, body {
     height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
     overflow-x: hidden;
 }
 
 body {
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 #app {
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    padding: 0 16px 32px;
     max-width: 600px;
     margin: 0 auto;
 }
 
-/* Header */
+/* ============================================================
+   HEADER
+   ============================================================ */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    padding: 20px 0 8px;
 }
 
 .header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
 }
 
 .stats {
     display: flex;
-    gap: 16px;
-    font-size: 16px;
+    gap: 12px;
+    font-size: 15px;
     color: var(--text-secondary);
+    font-weight: 500;
 }
 
-#streak {
-    color: var(--warning);
-}
+#streak { color: var(--warning); }
 
-/* Category Pills */
+/* ============================================================
+   CATEGORY PILLS  — Quartr filter tab style
+   ============================================================ */
 .category-pills {
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding-bottom: 4px;
     margin-bottom: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
-.category-pills::-webkit-scrollbar {
-    display: none;
-}
+.category-pills::-webkit-scrollbar { display: none; }
 
 .pill {
     flex-shrink: 0;
     padding: 8px 16px;
     border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--bg-secondary);
+    border: none;
+    background: var(--bg-elevated);
     color: var(--text-secondary);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.pill:hover {
-    background: var(--bg-hover);
+    transition: all 0.18s ease;
+    white-space: nowrap;
+    font-family: inherit;
 }
 
 .pill.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    font-weight: 600;
 }
 
-/* Question Card */
+/* ============================================================
+   QUESTION CARD
+   ============================================================ */
 .question-card {
     flex: 1;
     background: var(--bg-card);
-    border-radius: 20px;
-    padding: 24px;
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--border);
+    border: none;
+    animation: fadeIn 0.25s ease;
 }
 
 .category-badge {
     align-self: flex-start;
-    padding: 6px 12px;
-    border-radius: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background: rgba(99, 102, 241, 0.2);
+    letter-spacing: 0.6px;
+    margin-bottom: 18px;
+    background: var(--accent-light);
     color: var(--accent);
-    margin-bottom: 20px;
 }
 
-.category-badge.mentalmath { background: rgba(14, 165, 233, 0.2); color: #38bdf8; }
-.category-badge.probability { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
-.category-badge.tvm { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-.category-badge.gametheory { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-.category-badge.poker_gto { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
-.category-badge.stats { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
-.category-badge.combinatorics { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
-.category-badge.distressedcredit { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.category-badge.mentalmath    { background: rgba(10,132,255,0.15);  color: #0A84FF; }
+.category-badge.probability   { background: var(--accent-light);    color: var(--accent); }
+.category-badge.tvm           { background: rgba(48,164,108,0.15);  color: #30A46C; }
+.category-badge.gametheory    { background: rgba(255,159,10,0.15);  color: #FF9F0A; }
+.category-badge.stats         { background: rgba(191,90,242,0.15);  color: #BF5AF2; }
+.category-badge.combinatorics { background: rgba(255,69,58,0.15);   color: #FF453A; }
 
 .question-text {
     font-size: 20px;
-    line-height: 1.5;
-    margin-bottom: 24px;
+    line-height: 1.55;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 28px;
     flex: 1;
 }
 
-/* Answer Input */
+/* ============================================================
+   ANSWER INPUT
+   ============================================================ */
 .answer-section {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     margin-top: auto;
 }
 
 .answer-input {
     flex: 1;
-    padding: 16px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    background: var(--bg-secondary);
+    padding: 15px 16px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--bg-elevated);
     color: var(--text-primary);
-    font-size: 18px;
+    font-size: 16px;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: background 0.18s ease;
+    font-family: inherit;
 }
 
-.answer-input:focus {
-    border-color: var(--accent);
-}
-
-.answer-input::placeholder {
-    color: var(--text-muted);
-}
+.answer-input:focus         { background: var(--bg-control); }
+.answer-input::placeholder  { color: var(--text-muted); }
 
 .submit-btn {
-    padding: 16px 24px;
-    border-radius: 12px;
+    padding: 15px 22px;
+    border-radius: var(--radius-md);
     border: none;
     background: var(--accent);
     color: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.18s ease;
+    font-family: inherit;
 }
 
-.submit-btn:hover {
-    background: var(--accent-hover);
-}
+.submit-btn:active { transform: scale(0.97); }
 
-.submit-btn:active {
-    transform: scale(0.98);
-}
-
-/* Multiple Choice */
+/* ============================================================
+   MULTIPLE CHOICE
+   ============================================================ */
 .choices-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
     margin-top: auto;
 }
 
 .choice-btn {
-    padding: 16px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    background: var(--bg-secondary);
+    padding: 18px 12px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--bg-elevated);
     color: var(--text-primary);
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.18s ease;
     text-align: center;
+    font-family: inherit;
+    line-height: 1.4;
 }
 
-.choice-btn:hover {
-    border-color: var(--accent);
-    background: var(--bg-hover);
-}
+.choice-btn:active    { transform: scale(0.97); }
+.choice-btn.selected  { background: var(--accent-light); color: var(--accent); }
+.choice-btn.correct   { background: var(--success-bg);   color: var(--success); }
+.choice-btn.incorrect { background: var(--error-bg);     color: var(--error); }
 
-.choice-btn.selected {
-    border-color: var(--accent);
-    background: rgba(99, 102, 241, 0.2);
-}
-
-.choice-btn.correct {
-    border-color: var(--success);
-    background: var(--success-bg);
-}
-
-.choice-btn.incorrect {
-    border-color: var(--error);
-    background: var(--error-bg);
-}
-
-/* Result Section */
+/* ============================================================
+   RESULT FEEDBACK
+   ============================================================ */
 .result-section {
     text-align: center;
     margin-top: auto;
-    padding-top: 20px;
+    padding-top: 16px;
 }
 
 .result-icon {
-    font-size: 48px;
-    margin-bottom: 12px;
-}
-
-.result-icon.correct {
-    color: var(--success);
-}
-
-.result-icon.incorrect {
-    color: var(--error);
+    font-size: 44px;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .result-text {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     margin-bottom: 16px;
+    letter-spacing: -0.3px;
 }
 
-.result-text.correct {
-    color: var(--success);
-}
-
-.result-text.incorrect {
-    color: var(--error);
-}
+.result-text.correct   { color: var(--success); }
+.result-text.incorrect { color: var(--error); }
 
 .explanation {
     color: var(--text-secondary);
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     padding: 16px;
-    background: var(--bg-secondary);
-    border-radius: 12px;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-md);
     text-align: left;
 }
 
 .next-btn {
     width: 100%;
     padding: 16px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     border: none;
     background: var(--accent);
     color: white;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.18s ease;
+    font-family: inherit;
+    letter-spacing: -0.2px;
 }
 
-.next-btn:hover {
-    background: var(--accent-hover);
-}
+.next-btn:active { transform: scale(0.98); }
 
-/* Skip Button */
+/* ============================================================
+   SKIP
+   ============================================================ */
 .skip-btn {
-    margin-top: 16px;
-    padding: 12px;
-    border-radius: 12px;
+    margin-top: 14px;
+    padding: 10px;
     border: none;
     background: transparent;
     color: var(--text-muted);
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.18s ease;
+    font-family: inherit;
+    text-align: center;
+    width: 100%;
 }
 
-.skip-btn:hover {
-    color: var(--text-secondary);
-}
+.skip-btn:active { color: var(--text-secondary); }
 
-/* Utility */
-.hidden {
-    display: none !important;
-}
-
-/* Animations */
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.question-card {
-    animation: fadeIn 0.3s ease;
-}
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.hidden { display: none !important; }
 
-/* Mobile adjustments */
-@media (max-width: 400px) {
-    .question-text {
-        font-size: 18px;
-    }
+input[type="text"],
+input[type="password"],
+input[type="number"],
+textarea { font-size: 16px; }
 
-    .answer-input {
-        font-size: 16px;
-        padding: 14px;
-    }
-
-    .pill {
-        padding: 6px 12px;
-        font-size: 13px;
-    }
-}
-
-/* Prevent zoom on iOS */
-input[type="text"] {
-    font-size: 16px;
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width: 390px) {
+    .question-text { font-size: 18px; }
+    .header h1     { font-size: 24px; }
+    .choice-btn    { padding: 15px 10px; font-size: 14px; }
 }
