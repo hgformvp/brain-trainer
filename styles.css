@@ -260,7 +260,6 @@ body {
 }
 
 .numpad-submit {
-    grid-column: span 2;
     background: var(--accent);
     color: #ffffff;
     font-weight: 700;
