@@ -172,40 +172,79 @@ body {
    ============================================================ */
 .answer-section {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 12px;
     margin-top: auto;
 }
 
-.answer-input {
-    flex: 1;
-    padding: 15px 16px;
-    border-radius: var(--radius-md);
-    border: none;
+/* Answer Display */
+.answer-display {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--bg-elevated);
-    color: var(--text-primary);
-    font-size: 16px;
-    outline: none;
-    transition: background 0.18s ease;
-    font-family: inherit;
-}
-
-.answer-input:focus         { background: var(--bg-control); }
-.answer-input::placeholder  { color: var(--text-muted); }
-
-.submit-btn {
-    padding: 15px 22px;
     border-radius: var(--radius-md);
-    border: none;
-    background: var(--accent);
-    color: white;
-    font-size: 15px;
+    font-size: 28px;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    font-family: inherit;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    padding: 12px 16px;
 }
 
-.submit-btn:active { transform: scale(0.97); }
+.answer-display.placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 18px;
+}
+
+/* Numpad Grid */
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 4px;
+}
+
+.numpad-btn {
+    min-height: 64px;
+    border: none;
+    border-radius: 12px;
+    background: #1a1a1a;
+    color: var(--text-primary);
+    font-size: 22px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.15s ease;
+    font-family: inherit;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.numpad-btn:active {
+    transform: scale(0.95);
+    background: #252525;
+}
+
+.numpad-action {
+    background: #222;
+    color: var(--text-secondary);
+}
+
+.numpad-action:active {
+    background: #2a2a2a;
+}
+
+.numpad-submit {
+    grid-column: span 2;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+}
+
+.numpad-submit:active {
+    background: var(--accent-hover);
+}
 
 /* ============================================================
    MULTIPLE CHOICE

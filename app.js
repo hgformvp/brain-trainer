@@ -6,6 +6,7 @@
     // State
     let currentQuestion = null;
     let currentCategory = 'all';
+    let currentInput = '';
     let stats = {
         correct: 0,
         total: 0,
@@ -19,6 +20,8 @@
         categoryBadge: document.getElementById('category-badge'),
         answerSection: document.getElementById('answer-section'),
         answerInput: document.getElementById('answer-input'),
+        answerDisplay: document.getElementById('answer-input-display'),
+        numpad: document.querySelector('.numpad'),
         submitBtn: document.getElementById('submit-btn'),
         choicesSection: document.getElementById('choices-section'),
         choiceBtns: document.querySelectorAll('.choice-btn'),
@@ -55,11 +58,8 @@
 
     // Event listeners
     function setupEventListeners() {
-        // Submit answer
-        elements.submitBtn.addEventListener('click', submitAnswer);
-        elements.answerInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') submitAnswer();
-        });
+        // Numpad click handler
+        elements.numpad.addEventListener('click', handleNumpadClick);
 
         // Multiple choice
         elements.choiceBtns.forEach(btn => {
@@ -91,6 +91,56 @@
         });
     }
 
+    // Handle numpad button clicks
+    function handleNumpadClick(e) {
+        const btn = e.target.closest('.numpad-btn');
+        if (!btn) return;
+
+        const val = btn.dataset.val;
+        const action = btn.dataset.action;
+
+        if (btn.id === 'submit-btn') {
+            submitAnswer();
+            return;
+        }
+
+        if (action === 'backspace') {
+            currentInput = currentInput.slice(0, -1);
+        } else if (action === 'clear') {
+            currentInput = '';
+        } else if (action === 'negate') {
+            if (currentInput.startsWith('-')) {
+                currentInput = currentInput.slice(1);
+            } else if (currentInput.length > 0) {
+                currentInput = '-' + currentInput;
+            }
+        } else if (val !== undefined) {
+            // Prevent multiple decimals
+            if (val === '.' && currentInput.includes('.')) return;
+            // Prevent leading zeros (except for decimals like 0.5)
+            if (val === '0' && currentInput === '0') return;
+            if (currentInput === '0' && val !== '.') {
+                currentInput = val;
+            } else {
+                currentInput += val;
+            }
+        }
+
+        updateAnswerDisplay();
+    }
+
+    // Update the answer display
+    function updateAnswerDisplay() {
+        elements.answerInput.value = currentInput;
+        if (currentInput === '') {
+            elements.answerDisplay.textContent = 'Answer';
+            elements.answerDisplay.classList.add('placeholder');
+        } else {
+            elements.answerDisplay.textContent = currentInput;
+            elements.answerDisplay.classList.remove('placeholder');
+        }
+    }
+
     // Load a new question
     function loadNewQuestion() {
         // Use adaptive weighting when selecting from all categories
@@ -113,8 +163,8 @@
 
         // Reset UI
         elements.resultSection.classList.add('hidden');
-        elements.answerInput.value = '';
-        elements.answerInput.classList.remove('correct', 'incorrect');
+        currentInput = '';
+        updateAnswerDisplay();
         elements.choiceBtns.forEach(btn => {
             btn.classList.remove('selected', 'correct', 'incorrect');
         });
@@ -150,7 +200,6 @@
         const userAnswer = parseFloat(elements.answerInput.value.replace(/[,$%]/g, ''));
 
         if (isNaN(userAnswer)) {
-            elements.answerInput.focus();
             return;
         }
 
