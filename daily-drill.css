@@ -14,7 +14,7 @@
     margin-bottom: 20px;
     border-radius: 14px;
     border: ;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+    background: linear-gradient(135deg, rgba(61, 158, 95, 0.1), rgba(74, 222, 128, 0.1));
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -22,7 +22,7 @@
 .daily-drill-entry-btn:hover {
     border-color: var(--accent);
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 20px rgba(61, 158, 95, 0.2);
 }
 
 .drill-btn-icon {
@@ -346,7 +346,7 @@
 
 .drill-choice-btn.selected {
     border-color: var(--accent);
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(61, 158, 95, 0.15);
 }
 
 .drill-choice-btn.correct {
@@ -393,7 +393,7 @@
 
 .confidence-btn.selected {
     border-color: var(--accent);
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(61, 158, 95, 0.15);
     color: var(--accent);
 }
 
@@ -915,7 +915,7 @@
 
 .drill-setting-option.selected {
     border-color: var(--accent);
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(61, 158, 95, 0.15);
     color: var(--accent);
 }
 
@@ -1307,7 +1307,7 @@
     letter-spacing: 0.5px;
     padding: 4px 8px;
     border-radius: 6px;
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(61, 158, 95, 0.15);
     color: var(--accent);
 }
 

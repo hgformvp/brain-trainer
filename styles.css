@@ -10,30 +10,30 @@
 }
 
 :root {
-    --bg-primary:   #000000;
-    --bg-card:      #1C1C1E;
-    --bg-elevated:  #2C2C2E;
-    --bg-control:   #3A3A3C;
+    --bg-primary: #0a1a0f;
+    --bg-secondary: #0f2014;
+    --bg-card: #162b1c;
+    --bg-elevated: #1e3826;
+    --bg-hover: #1e3826;
+    --bg-control: #2a4a32;
 
-    /* Legacy aliases so library/drill CSS doesn't break */
-    --bg-secondary: #1C1C1E;
-    --bg-hover:     #2C2C2E;
+    --text-primary: #ffffff;
+    --text-secondary: #8aab90;
+    --text-muted: #4a6b50;
 
-    --text-primary:   #FFFFFF;
-    --text-secondary: #8E8E93;
-    --text-muted:     #48484A;
+    --accent: #3d9e5f;
+    --accent-bright: #4ade80;
+    --accent-light: rgba(61, 158, 95, 0.18);
+    --accent-hover: #2d7a47;
 
-    --accent:       #30A46C;
-    --accent-light: rgba(48, 164, 108, 0.18);
-    --accent-hover: #38C07D;
+    --success: #4ade80;
+    --success-bg: rgba(74, 222, 128, 0.15);
+    --error: #f87171;
+    --error-bg: rgba(248, 113, 113, 0.15);
+    --warning: #fbbf24;
 
-    --success:    #30A46C;
-    --success-bg: rgba(48, 164, 108, 0.15);
-    --error:      #FF453A;
-    --error-bg:   rgba(255, 69, 58, 0.15);
-    --warning:    #FF9F0A;
-
-    --border:    rgba(255,255,255,0.08);
+    --border: #1e3826;
+    --tab-underline: #4ade80;
     --radius-sm: 10px;
     --radius-md: 14px;
     --radius-lg: 20px;
@@ -65,62 +65,86 @@ body {
    HEADER
    ============================================================ */
 .header {
+    position: relative;
+    margin: -16px -16px 0 -16px;
+    padding: 52px 20px 20px 20px;
+    background: linear-gradient(180deg, #1a4a2a 0%, #0f2a18 60%, transparent 100%);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 20px 0 8px;
+    align-items: flex-end;
+    margin-bottom: 0;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 120px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(61, 158, 95, 0.35) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--text-primary);
+    color: #ffffff;
 }
 
 .stats {
     display: flex;
-    gap: 12px;
-    font-size: 15px;
+    gap: 16px;
+    font-size: 14px;
     color: var(--text-secondary);
-    font-weight: 500;
 }
 
 #streak { color: var(--warning); }
 
 /* ============================================================
-   CATEGORY PILLS  — Quartr filter tab style
+   CATEGORY TABS — Quartr underline style
    ============================================================ */
 .category-pills {
     display: flex;
-    gap: 8px;
+    gap: 0;
     overflow-x: auto;
-    padding-bottom: 4px;
-    margin-bottom: 20px;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    margin: 0 -16px;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 20px;
+    background: linear-gradient(180deg, #0f2014 0%, #0a1a0f 100%);
 }
 
-.category-pills::-webkit-scrollbar { display: none; }
+.category-pills::-webkit-scrollbar {
+    display: none;
+}
 
 .pill {
     flex-shrink: 0;
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 14px 16px 12px 16px;
+    border-radius: 0;
     border: none;
-    background: var(--bg-elevated);
+    border-bottom: 2px solid transparent;
+    background: transparent;
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.18s ease;
-    white-space: nowrap;
+    transition: all 0.2s ease;
     font-family: inherit;
+    white-space: nowrap;
+    margin-bottom: -1px;
+}
+
+.pill:hover {
+    color: var(--text-primary);
+    background: transparent;
 }
 
 .pill.active {
-    background: var(--text-primary);
-    color: var(--bg-primary);
+    background: transparent;
+    border-bottom: 2px solid var(--tab-underline);
+    color: #ffffff;
     font-weight: 600;
 }
 
@@ -130,11 +154,11 @@ body {
 .question-card {
     flex: 1;
     background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
+    border-radius: 16px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.07);
     animation: fadeIn 0.25s ease;
 }
 
@@ -147,16 +171,16 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.6px;
     margin-bottom: 18px;
-    background: var(--accent-light);
-    color: var(--accent);
+    background: rgba(61,158,95,0.2);
+    color: #4ade80;
 }
 
-.category-badge.mentalmath    { background: rgba(10,132,255,0.15);  color: #0A84FF; }
-.category-badge.probability   { background: var(--accent-light);    color: var(--accent); }
-.category-badge.tvm           { background: rgba(48,164,108,0.15);  color: #30A46C; }
-.category-badge.gametheory    { background: rgba(255,159,10,0.15);  color: #FF9F0A; }
-.category-badge.stats         { background: rgba(191,90,242,0.15);  color: #BF5AF2; }
-.category-badge.combinatorics { background: rgba(255,69,58,0.15);   color: #FF453A; }
+.category-badge.mentalmath    { background: rgba(74,222,128,0.15);  color: #4ade80; }
+.category-badge.probability   { background: rgba(61,158,95,0.2);    color: #6ee7a0; }
+.category-badge.tvm           { background: rgba(34,197,94,0.2);    color: #86efac; }
+.category-badge.gametheory    { background: rgba(74,222,128,0.12);  color: #4ade80; }
+.category-badge.stats         { background: rgba(61,158,95,0.2);    color: #6ee7a0; }
+.category-badge.combinatorics { background: rgba(34,197,94,0.15);   color: #4ade80; }
 
 .question-text {
     font-size: 20px;
@@ -210,7 +234,7 @@ body {
     min-height: 64px;
     border: none;
     border-radius: 12px;
-    background: #1a1a1a;
+    background: #0f2014;
     color: var(--text-primary);
     font-size: 22px;
     font-weight: 500;
@@ -223,22 +247,22 @@ body {
 
 .numpad-btn:active {
     transform: scale(0.95);
-    background: #252525;
+    background: #1e3826;
 }
 
 .numpad-action {
-    background: #222;
+    background: #162b1c;
     color: var(--text-secondary);
 }
 
 .numpad-action:active {
-    background: #2a2a2a;
+    background: #1e3826;
 }
 
 .numpad-submit {
     grid-column: span 2;
     background: var(--accent);
-    color: #000;
+    color: #ffffff;
     font-weight: 700;
 }
 
