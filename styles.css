@@ -10,12 +10,12 @@
 }
 
 :root {
-    --bg-primary: #0a1a0f;
-    --bg-secondary: #0f2014;
-    --bg-card: #162b1c;
-    --bg-elevated: #1e3826;
-    --bg-hover: #1e3826;
-    --bg-control: #2a4a32;
+    --bg-primary: #050505;
+    --bg-secondary: #0a0a0a;
+    --bg-card: #111111;
+    --bg-elevated: #1a1a1a;
+    --bg-hover: #1a1a1a;
+    --bg-control: #252525;
 
     --text-primary: #ffffff;
     --text-secondary: #8aab90;
@@ -32,7 +32,7 @@
     --error-bg: rgba(248, 113, 113, 0.15);
     --warning: #fbbf24;
 
-    --border: #1e3826;
+    --border: #1a1a1a;
     --tab-underline: #4ade80;
     --radius-sm: 10px;
     --radius-md: 14px;
@@ -68,7 +68,7 @@ body {
     position: relative;
     margin: -16px -16px 0 -16px;
     padding: 52px 20px 20px 20px;
-    background: linear-gradient(180deg, #1a4a2a 0%, #0f2a18 60%, transparent 100%);
+    background: linear-gradient(180deg, #0f1f14 0%, #080808 60%, transparent 100%);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -80,7 +80,7 @@ body {
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 120px;
-    background: radial-gradient(ellipse at 50% 0%, rgba(61, 158, 95, 0.35) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(61, 158, 95, 0.2) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -112,7 +112,7 @@ body {
     padding: 0 16px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
     margin-bottom: 20px;
-    background: linear-gradient(180deg, #0f2014 0%, #0a1a0f 100%);
+    background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
 }
 
 .category-pills::-webkit-scrollbar {
@@ -234,7 +234,7 @@ body {
     min-height: 64px;
     border: none;
     border-radius: 12px;
-    background: #0f2014;
+    background: #111111;
     color: var(--text-primary);
     font-size: 22px;
     font-weight: 500;
@@ -247,16 +247,16 @@ body {
 
 .numpad-btn:active {
     transform: scale(0.95);
-    background: #1e3826;
+    background: #1a1a1a;
 }
 
 .numpad-action {
-    background: #162b1c;
+    background: #1a1a1a;
     color: var(--text-secondary);
 }
 
 .numpad-action:active {
-    background: #1e3826;
+    background: #222222;
 }
 
 .numpad-submit {

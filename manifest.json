@@ -4,8 +4,8 @@
   "description": "Mental exercises for finance professionals",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0a1a0f",
-  "theme_color": "#0a1a0f",
+  "background_color": "#050505",
+  "theme_color": "#050505",
   "icons": [
     {
       "src": "icon.svg",
