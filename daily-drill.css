@@ -1,6 +1,10 @@
 /* Daily Drill Styles - Brain Trainer */
 /* Uses CSS variables from styles.css */
 
+* {
+    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+}
+
 /* ==========================================
    DAILY DRILL ENTRY BUTTON (Library Home)
    ========================================== */

@@ -1,5 +1,9 @@
 /* Library Styles - Brain Trainer — Quartr Design System */
 
+* {
+    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+}
+
 /* ==========================================
    MODE TOGGLE (Train/Library)  — Quartr pill nav
    ========================================== */
