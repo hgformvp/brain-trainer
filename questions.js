@@ -1467,6 +1467,10 @@ function getRandomQuestion(category = 'all') {
     return question;
 }
 
+if (typeof window !== 'undefined' && window.EconQuestions) {
+    Questions.econ = window.EconQuestions;
+}
+
 // Export for use in app.js
 window.Questions = Questions;
 window.getRandomQuestion = getRandomQuestion;

@@ -46,7 +46,8 @@
         poker_gto: 'Poker GTO',
         stats: 'Statistics',
         combinatorics: 'Combinatorics',
-        distressedcredit: 'Distressed Credit'
+        distressedcredit: 'Distressed Credit',
+        econ: 'Econ Exam'
     };
 
     // Initialize
